@@ -1,66 +1,19 @@
 import React from 'react';
 import './Grid.scss'
+import Column from './Column.js'
 
 class Grid extends React.Component {
     render() {
+        const nColumns = 30;
+
+        var columns = [];
+        for (var i = 0; i < nColumns; i++) {
+            columns.push(<Column key={i}/>);
+        }
+
         return(
             <div>
-                <div className="column">
-                    <div className="square">
-                        1
-                    </div>
-                    <div className="square">
-                        2
-                    </div>
-                    <div className="square">
-                        1
-                    </div>
-                    <div className="square">
-                        2
-                    </div>
-                </div>
-                <div className="column">
-                    <div className="square">
-                        2
-                    </div>
-                    <div className="square">
-                        1
-                    </div>
-                    <div className="square">
-                        2
-                    </div>
-                    <div className="square">
-                        1
-                    </div>
-                </div>
-                <div className="column">
-                    <div className="square">
-                        1
-                    </div>
-                    <div className="square">
-                        2
-                    </div>
-                    <div className="square">
-                        1
-                    </div>
-                    <div className="square">
-                        2
-                    </div>
-                </div>
-                <div className="column">
-                    <div className="square">
-                        2
-                    </div>
-                    <div className="square">
-                        1
-                    </div>
-                    <div className="square">
-                        2
-                    </div>
-                    <div className="square">
-                        1
-                    </div>
-                </div>
+                {columns}
             </div>
         );
     }
