@@ -1,9 +1,10 @@
 import React from 'react';
+import Grid from './Grid.js'
 
 class App extends React.Component {
     render() {
         return(
-            <h1>Hello</h1>
+            <Grid/>
         );
     }
 }
