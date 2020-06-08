@@ -1,9 +1,37 @@
+.grid {
+    margin: 2px;
+}
+
 .column {
     display: inline-block;
 }
 
 .square {
-    width: 30px;
-    height: 30px;
+    width: 18px;
+    height: 18px;
+    border: 1px solid red;
+}
+
+.higherSquare {
+    width: 18px;
+    height: 19px;
+    border: 1px solid red;
+}
+
+.widerSquare {
+    width: 19px;
+    height: 18px;
+    border: 1px solid red;
+}
+
+.higherAndWiderSquare {
+    width: 19px;
+    height: 19px;
+    border: 1px solid red;
+}
+
+.normalSquare {
+    width: 18px;
+    height: 18px;
     border: 1px solid red;
 }

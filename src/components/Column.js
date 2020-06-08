@@ -3,12 +3,19 @@ import Square from './Square.js'
 
 class Column extends React.Component {
 
+    constructor(props) {
+        super(props);
+    }
+
     render() {
-        const nSquares = 30; 
+        var nBiggerSquares = this.props.gridHeight % this.props.squareSize;
 
         var squares = [];
-        for (var i = 0; i < nSquares; i++) {
-            squares.push(<Square key={i}/>);
+        for (var i = 0; i < this.props.nSquares - nBiggerSquares; i++) {
+            squares.push(<Square key={i} higher={false} wider={this.props.wider}/>);
+        }
+        for (i = 0; i < nBiggerSquares; i++) {
+            squares.push(<Square key={i} higher={true} wider={this.props.wider}/>);
         }
         return(
             <div className="column">
