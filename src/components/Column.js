@@ -8,14 +8,12 @@ class Column extends React.Component {
     }
 
     render() {
-        var nBiggerSquares = this.props.gridHeight % this.props.squareSize;
-
         var squares = [];
-        for (var i = 0; i < this.props.nSquares - nBiggerSquares; i++) {
-            squares.push(<Square key={i} higher={false} wider={this.props.wider}/>);
+        for (var i = 0; i < this.props.nHigherSquares; i++) {
+            squares.push(<Square key={this.props.keyCopy.toString() + i.toString()} higher={true} wider={this.props.wider}/>);
         }
-        for (i = 0; i < nBiggerSquares; i++) {
-            squares.push(<Square key={i} higher={true} wider={this.props.wider}/>);
+        for (i = 0; i < this.props.nSquares - this.props.nHigherSquares; i++) {
+            squares.push(<Square key={this.props.keyCopy.toString() + (i + this.props.nHigherSquares).toString()} higher={false} wider={this.props.wider}/>);
         }
         return(
             <div className="column">
