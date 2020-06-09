@@ -11,6 +11,7 @@ class Grid extends React.Component {
             width: 0,
             height: 0,
             mousedown: 0,
+            color: "green",
         }
         this.handleMouseDown = this.handleMouseDown.bind(this);
         this.handleMouseUp = this.handleMouseUp.bind(this);
@@ -60,8 +61,13 @@ class Grid extends React.Component {
             columns.push(<Column key={i+nWiderCols} keyCopy={i} nSquares={nSquares} nHigherSquares={nHigherSquares} squareSize={squareSize} wider={false}/>);
         }
 
+        var context_value = {
+            mousedown: this.state.mousedown,
+            color: this.state.color,
+        }
+
         return( 
-            <MouseDownContext.Provider value={this.state.mousedown}>
+            <MouseDownContext.Provider value={context_value}>
             <div className="grid">
                 {columns}
             </div>

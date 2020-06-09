@@ -14,16 +14,16 @@ class Square extends React.Component {
     }
 
     handleOnMouseEnter() {
-        if (this.context === 1) {
+        if (this.context.mousedown === 1) {
             this.setState({
-                color: "black",
+                color: this.context.color,
             });
         }
     }
 
     handleOnMouseDown() {
         this.setState({
-            color: "black",
+            color: this.context.color,
         });
     }
 
