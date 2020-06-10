@@ -32,7 +32,7 @@ class Square extends React.Component {
     }
 
     render() {
-        this.props.setSquareInGrid(this.props.x, this.props.y, this.state.colorStatus);
+        this.props.setSquareInGrid(this.props.x, this.props.y, this);
         return(
             <div onMouseDown={this.handleOnMouseDown} onMouseEnter={this.handleOnMouseEnter} style={{backgroundColor: this.state.color}} className={this.props.higher === true ? this.props.wider === true ? "higherAndWiderSquare": "higherSquare" : this.props.wider === true ? "widerSquare" : "normalSquare"}></div>
         );

@@ -47,9 +47,6 @@ class Grid extends React.Component {
 
     setSquareInGrid(x,y,val) {
         this.grid.set(x.toString() + "-" + y.toString(),val);
-        if(x === 0 && y === 0) {
-            console.log(this.grid);
-        }
     }
 
 
