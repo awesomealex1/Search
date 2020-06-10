@@ -13,8 +13,10 @@ class Grid extends React.Component {
             mousedown: 0,
             color: "green",
         }
+        this.grid = new Map();
         this.handleMouseDown = this.handleMouseDown.bind(this);
         this.handleMouseUp = this.handleMouseUp.bind(this);
+        this.setSquareInGrid = this.setSquareInGrid.bind(this);
     }
 
     componentDidMount() {
@@ -43,6 +45,13 @@ class Grid extends React.Component {
         });
     }
 
+    setSquareInGrid(x,y,val) {
+        this.grid.set(x.toString() + "-" + y.toString(),val);
+        if(x === 0 && y === 0) {
+            console.log(this.grid);
+        }
+    }
+
 
     render() {
         const squareSize = 19;  //Square height and width [px]
@@ -54,11 +63,14 @@ class Grid extends React.Component {
         var nHigherSquares = this.state.height % squareSize;
 
         var columns = [];
+        var column;
         for (var i = 0; i < nWiderCols; i++) {
-            columns.push(<Column key={i} keyCopy={i} nSquares={nSquares} nHigherSquares={nHigherSquares} squareSize={squareSize} wider={true}/>);
+            column = <Column key={i} x={i} nSquares={nSquares} nHigherSquares={nHigherSquares} squareSize={squareSize} wider={true} setSquareInGrid={this.setSquareInGrid}/>;
+            columns.push(column);
         }
         for (i = 0; i < nColumns - nWiderCols; i++) {
-            columns.push(<Column key={i+nWiderCols} keyCopy={i+nWiderCols} nSquares={nSquares} nHigherSquares={nHigherSquares} squareSize={squareSize} wider={false}/>);
+            column = <Column key={i+nWiderCols} x={i+nWiderCols} nSquares={nSquares} nHigherSquares={nHigherSquares} squareSize={squareSize} wider={false} setSquareInGrid={this.setSquareInGrid}/>;
+            columns.push(column);
         }
 
         var context_value = {
