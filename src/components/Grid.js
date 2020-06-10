@@ -58,7 +58,7 @@ class Grid extends React.Component {
             columns.push(<Column key={i} keyCopy={i} nSquares={nSquares} nHigherSquares={nHigherSquares} squareSize={squareSize} wider={true}/>);
         }
         for (i = 0; i < nColumns - nWiderCols; i++) {
-            columns.push(<Column key={i+nWiderCols} keyCopy={i} nSquares={nSquares} nHigherSquares={nHigherSquares} squareSize={squareSize} wider={false}/>);
+            columns.push(<Column key={i+nWiderCols} keyCopy={i+nWiderCols} nSquares={nSquares} nHigherSquares={nHigherSquares} squareSize={squareSize} wider={false}/>);
         }
 
         var context_value = {
