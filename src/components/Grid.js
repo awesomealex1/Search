@@ -2,6 +2,7 @@ import React from 'react';
 import './Grid.scss'
 import Column from './Column.js'
 import {MouseDownContext} from './context.js'
+import {colors} from './../colors.js'
 
 class Grid extends React.Component {
     
@@ -11,7 +12,7 @@ class Grid extends React.Component {
             width: 0,
             height: 0,
             mousedown: 0,
-            color: "green",
+            color: colors.filled,
         }
         this.grid = new Map();
         this.handleMouseDown = this.handleMouseDown.bind(this);
@@ -37,6 +38,8 @@ class Grid extends React.Component {
         this.setState({
             mousedown: 1,
         });
+        this.setStartSquare(10,10);
+        this.setEndSquare(14,10);
     }
 
     handleMouseUp() {
@@ -49,6 +52,17 @@ class Grid extends React.Component {
         this.grid.set(x.toString() + "-" + y.toString(),val);
     }
 
+    colorSquare(x,y,color=this.state.color,squareStatus=1) {
+        this.grid.get(x.toString() + "-" + y.toString()).colorSquare(color,squareStatus);
+    }
+
+    setStartSquare(x,y) {
+        this.grid.get(x.toString() + "-" + y.toString()).colorSquare(colors.start,2);
+    }
+
+    setEndSquare(x,y) {
+        this.grid.get(x.toString() + "-" + y.toString()).colorSquare(colors.end,3);
+    }
 
     render() {
         const squareSize = 19;  //Square height and width [px]
@@ -61,6 +75,7 @@ class Grid extends React.Component {
 
         var columns = [];
         var column;
+
         for (var i = 0; i < nWiderCols; i++) {
             column = <Column key={i} x={i} nSquares={nSquares} nHigherSquares={nHigherSquares} squareSize={squareSize} wider={true} setSquareInGrid={this.setSquareInGrid}/>;
             columns.push(column);
