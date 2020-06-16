@@ -80,8 +80,6 @@ class Grid extends React.Component {
     startSearch(timeInterval,algorithm) {
         var xStart = this.start.props.x;
         var yStart = this.start.props.y;
-        var xEnd = this.end.props.x;
-        var yEnd = this.end.props.y;
         this.interval = timeInterval;
         console.log("search started");
         this.DFS(xStart,yStart);
@@ -124,7 +122,7 @@ class Grid extends React.Component {
             adj.push(this.getSquare(x+1,y));
         }
         if (this.getSquare(x-1,y) !== undefined && this.getSquare(x-1,y).state.visited === 0) {
-                adj.push(this.getSquare(x-1,y));
+            adj.push(this.getSquare(x-1,y));
         }
         if (this.getSquare(x,y+1) !== undefined && this.getSquare(x,y+1).state.visited === 0) {
             adj.push(this.getSquare(x,y+1));
@@ -176,23 +174,19 @@ class Grid extends React.Component {
     }
 */
     DFS(x,y) {
-        this.x = x;
-        this.y = y;
-        this.stack = [];
-        this.stack.push(this.getSquare(x,y));
-        this.getSquare(x,y).setAsVisited();
+        var stack = [];
+        stack.push(this.getSquare(x,y));
+        var nextSquare = this.getSquare(x,y);
+        nextSquare.setAsVisited();
 
-        if(this.x != this.xEnd || this.y != this.yEnd && this.stack.length > 0) {
-            this.DFSLoop();
-        }   
+        if(x != this.xEnd || y != this.yEnd && this.stack.length > 0) {
+            this.DFSLoop(x,y,nextSquare,stack);
+        }
     }
 
-    DFSLoop() {
-        var x = this.x;
-        var y = this.y;
-        var nextSquare = this.nextSquare;
-        var stack = this.stack;
-        var adj = this.AdjacentSquares(this.getSquare(x,y))
+    DFSLoop(x,y,nextSquare,stack) {
+        console.log(x,y,nextSquare,stack);
+        var adj = this.AdjacentSquares(nextSquare)
         if (adj.length > 0) {
             nextSquare = adj[0];
         } else {
@@ -202,14 +196,9 @@ class Grid extends React.Component {
             x = tmp.props.x;
             y = tmp.props.y;
             stack.push(tmp);
-
-            this.x = x;
-            this.y = y;
-            this.nextSquare = this.nextSquare;
-            this.stack = stack;
-
-            if(this.x != this.xEnd || this.y != this.yEnd && this.stack.length > 0) {
-                setTimeout(function() {this.DFSLoop()}.bind(this),this.interval);
+            nextSquare = tmp;
+            if(x != this.xEnd || y != this.yEnd && stack.length > 0) {
+                setTimeout(function(x,y,nextSquare,stack) {this.DFSLoop(x,y,nextSquare,stack)}.bind(this),this.interval,x,y,nextSquare,stack);
             }
             return 0;
         }
@@ -224,13 +213,8 @@ class Grid extends React.Component {
         x = nextSquare.props.x;
         y = nextSquare.props.y;
 
-        this.x = x;
-        this.y = y;
-        this.nextSquare = this.nextSquare;
-        this.stack = stack;
-
-        if(this.x != this.xEnd || this.y != this.yEnd && this.stack.length > 0) {
-            setTimeout(function() {this.DFSLoop()}.bind(this),this.interval);
+        if(x != this.xEnd || y != this.yEnd && stack.length > 0) {
+            setTimeout(function(x,y,nextSquare,stack) {this.DFSLoop(x,y,nextSquare,stack)}.bind(this),this.interval,x,y,nextSquare,stack);
         }
     }
 
