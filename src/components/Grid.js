@@ -84,7 +84,7 @@ class Grid extends React.Component {
         var yEnd = this.end.props.y;
         this.interval = timeInterval;
         console.log("search started");
-        this.BFS(xStart,yStart);
+        this.DFS(xStart,yStart);
     }
 
     BFS(x,y) {
@@ -136,7 +136,7 @@ class Grid extends React.Component {
     }
 
 /*  Implementation of DFS using recursion (hard to add settimeout to it)
-    DFS(x,y,xEnd,yEnd) {
+    DFSRecursive(x,y,xEnd,yEnd) {
 
         if (x === xEnd && y === yEnd) {
             this.getSquare(x,y).colorSquare(colors.end, 3);
@@ -175,7 +175,7 @@ class Grid extends React.Component {
         }
     }
 */
-    DFS2(x,y) {
+    DFS(x,y) {
         this.x = x;
         this.y = y;
         this.stack = [];
@@ -183,23 +183,18 @@ class Grid extends React.Component {
         this.getSquare(x,y).setAsVisited();
 
         if(this.x != this.xEnd || this.y != this.yEnd && this.stack.length > 0) {
-            this.DFS2Loop();
+            this.DFSLoop();
         }   
     }
 
-    DFS2Loop() {
+    DFSLoop() {
         var x = this.x;
         var y = this.y;
         var nextSquare = this.nextSquare;
         var stack = this.stack;
-        if (this.getSquare(x+1,y) !== undefined && this.getSquare(x+1,y).state.visited === 0) {
-            nextSquare = this.getSquare(x+1,y);
-        } else if (this.getSquare(x-1,y) !== undefined && this.getSquare(x-1,y).state.visited === 0) {
-            nextSquare = this.getSquare(x-1,y);
-        } else if (this.getSquare(x,y+1) !== undefined && this.getSquare(x,y+1).state.visited === 0) {
-            nextSquare = this.getSquare(x,y+1);
-        } else if (this.getSquare(x,y-1) !== undefined && this.getSquare(x,y-1).state.visited === 0) {
-            nextSquare = this.getSquare(x,y-1);
+        var adj = this.AdjacentSquares(this.getSquare(x,y))
+        if (adj.length > 0) {
+            nextSquare = adj[0];
         } else {
             var top = stack.pop();
             var tmp = stack.pop();
@@ -214,7 +209,7 @@ class Grid extends React.Component {
             this.stack = stack;
 
             if(this.x != this.xEnd || this.y != this.yEnd && this.stack.length > 0) {
-                setTimeout(function() {this.DFS2Loop()}.bind(this),this.interval);
+                setTimeout(function() {this.DFSLoop()}.bind(this),this.interval);
             }
             return 0;
         }
@@ -235,7 +230,7 @@ class Grid extends React.Component {
         this.stack = stack;
 
         if(this.x != this.xEnd || this.y != this.yEnd && this.stack.length > 0) {
-            setTimeout(function() {this.DFS2Loop()}.bind(this),this.interval);
+            setTimeout(function() {this.DFSLoop()}.bind(this),this.interval);
         }
     }
 
