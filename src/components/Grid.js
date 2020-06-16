@@ -84,9 +84,58 @@ class Grid extends React.Component {
         var yEnd = this.end.props.y;
         this.interval = timeInterval;
         console.log("search started");
-        this.DFS2(xStart,yStart,xEnd,yEnd);
+        this.BFS(xStart,yStart);
     }
 
+    BFS(x,y) {
+        this.x = x;
+        this.y = y;
+        this.queue = [];
+        this.queue.push(this.getSquare(x,y));
+        this.getSquare(x,y).setAsVisited();
+
+        if(this.queue.length > 0) {
+            this.BFSLoop();
+        }
+    }
+
+    BFSLoop() {
+        this.square = this.queue.shift();
+        if(this.square.props.x === this.xEnd && this.square.props.y === this.yEnd) {
+            return 0;
+        }
+        var adj = this.AdjacentSquares(this.square);
+        for (var i = 0; i < adj.length; i++) {
+            if(adj[i].props.x === this.xEnd && adj[i].props.y === this.yEnd) {
+                return 0;
+            }
+            adj[i].setAsVisited();
+            this.queue.push(adj[i]);
+            adj[i].colorSquare(colors.visited, 4);
+        }
+        setTimeout(function() {this.BFSLoop()}.bind(this),this.interval);
+    }
+
+    AdjacentSquares(square) {
+        var x = square.props.x;
+        var y = square.props.y;
+        var adj = [];
+        if (this.getSquare(x+1,y) !== undefined && this.getSquare(x+1,y).state.visited === 0) {
+            adj.push(this.getSquare(x+1,y));
+        }
+        if (this.getSquare(x-1,y) !== undefined && this.getSquare(x-1,y).state.visited === 0) {
+                adj.push(this.getSquare(x-1,y));
+        }
+        if (this.getSquare(x,y+1) !== undefined && this.getSquare(x,y+1).state.visited === 0) {
+            adj.push(this.getSquare(x,y+1));
+        }
+        if (this.getSquare(x,y-1) !== undefined && this.getSquare(x,y-1).state.visited === 0) {
+            adj.push(this.getSquare(x,y-1));
+        }
+        return adj;
+    }
+
+/*  Implementation of DFS using recursion (hard to add settimeout to it)
     DFS(x,y,xEnd,yEnd) {
 
         if (x === xEnd && y === yEnd) {
@@ -125,7 +174,7 @@ class Grid extends React.Component {
             }
         }
     }
-
+*/
     DFS2(x,y) {
         this.x = x;
         this.y = y;
@@ -139,7 +188,6 @@ class Grid extends React.Component {
     }
 
     DFS2Loop() {
-        console.log("Hello");
         var x = this.x;
         var y = this.y;
         var nextSquare = this.nextSquare;
@@ -166,10 +214,7 @@ class Grid extends React.Component {
             this.stack = stack;
 
             if(this.x != this.xEnd || this.y != this.yEnd && this.stack.length > 0) {
-                console.log("Call 1");
                 setTimeout(function() {this.DFS2Loop()}.bind(this),this.interval);
-            } else {
-                console.log("Bye");
             }
             return 0;
         }
@@ -190,10 +235,7 @@ class Grid extends React.Component {
         this.stack = stack;
 
         if(this.x != this.xEnd || this.y != this.yEnd && this.stack.length > 0) {
-            console.log("Call 2");
             setTimeout(function() {this.DFS2Loop()}.bind(this),this.interval);
-        } else {
-            console.log("Bye");
         }
     }
 
