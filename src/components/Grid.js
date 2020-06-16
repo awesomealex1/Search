@@ -62,11 +62,15 @@ class Grid extends React.Component {
     setStartSquare(x,y) {
         this.colorSquare(x,y,colors.start,2);
         this.start = this.getSquare(x,y);
+        this.xStart = x;
+        this.yStart = y;
     }
 
     setEndSquare(x,y) {
         this.colorSquare(x,y,colors.end,3);
         this.end = this.getSquare(x,y);
+        this.xEnd = x;
+        this.yEnd = y;
     }
 
     getSquare(x,y) {
@@ -78,8 +82,9 @@ class Grid extends React.Component {
         var yStart = this.start.props.y;
         var xEnd = this.end.props.x;
         var yEnd = this.end.props.y;
+        this.interval = timeInterval;
         console.log("search started");
-        this.DFS(xStart,yStart,xEnd,yEnd);
+        this.DFS2(xStart,yStart,xEnd,yEnd);
     }
 
     DFS(x,y,xEnd,yEnd) {
@@ -113,8 +118,6 @@ class Grid extends React.Component {
                 return 0;
             }
 
-            
-
             if (this.DFS(nextSquare.props.x,nextSquare.props.y,xEnd,yEnd) === 1) {
                 return 1
             } else {
@@ -123,43 +126,75 @@ class Grid extends React.Component {
         }
     }
 
-    DFS2(x,y,xEnd,yEnd) {
-
-        var stack = [];
-        stack.push(this.getSquare(x,y));
+    DFS2(x,y) {
+        this.x = x;
+        this.y = y;
+        this.stack = [];
+        this.stack.push(this.getSquare(x,y));
         this.getSquare(x,y).setAsVisited();
-        var nextSquare;
 
-        while(x != xEnd || y != yEnd && stack.length > 0) {
-            if (this.getSquare(x+1,y) !== undefined && this.getSquare(x+1,y).state.visited === 0) {
-                nextSquare = this.getSquare(x+1,y);
-            } else if (this.getSquare(x-1,y) !== undefined && this.getSquare(x-1,y).state.visited === 0) {
-                nextSquare = this.getSquare(x-1,y);
-            } else if (this.getSquare(x,y+1) !== undefined && this.getSquare(x,y+1).state.visited === 0) {
-                nextSquare = this.getSquare(x,y+1);
-            } else if (this.getSquare(x,y-1) !== undefined && this.getSquare(x,y-1).state.visited === 0) {
-                nextSquare = this.getSquare(x,y-1);
+        if(this.x != this.xEnd || this.y != this.yEnd && this.stack.length > 0) {
+            this.DFS2Loop();
+        }   
+    }
+
+    DFS2Loop() {
+        console.log("Hello");
+        var x = this.x;
+        var y = this.y;
+        var nextSquare = this.nextSquare;
+        var stack = this.stack;
+        if (this.getSquare(x+1,y) !== undefined && this.getSquare(x+1,y).state.visited === 0) {
+            nextSquare = this.getSquare(x+1,y);
+        } else if (this.getSquare(x-1,y) !== undefined && this.getSquare(x-1,y).state.visited === 0) {
+            nextSquare = this.getSquare(x-1,y);
+        } else if (this.getSquare(x,y+1) !== undefined && this.getSquare(x,y+1).state.visited === 0) {
+            nextSquare = this.getSquare(x,y+1);
+        } else if (this.getSquare(x,y-1) !== undefined && this.getSquare(x,y-1).state.visited === 0) {
+            nextSquare = this.getSquare(x,y-1);
+        } else {
+            var top = stack.pop();
+            var tmp = stack.pop();
+            top.colorSquare(colors.empty, 0);
+            x = tmp.props.x;
+            y = tmp.props.y;
+            stack.push(tmp);
+
+            this.x = x;
+            this.y = y;
+            this.nextSquare = this.nextSquare;
+            this.stack = stack;
+
+            if(this.x != this.xEnd || this.y != this.yEnd && this.stack.length > 0) {
+                console.log("Call 1");
+                setTimeout(function() {this.DFS2Loop()}.bind(this),this.interval);
             } else {
-                var top = stack.pop();
-                var tmp = stack.pop();
-                top.colorSquare(colors.empty, 0);
-                x = tmp.props.x;
-                y = tmp.props.y;
-                stack.push(tmp);
-                continue;
+                console.log("Bye");
             }
-
-            stack.push(nextSquare);
-            nextSquare.setAsVisited();
-
-            if (nextSquare.props.x !== 10 || nextSquare.props.y !== 10) {
-                nextSquare.colorSquare(colors.visited, 4);
-            }
-
-            x = nextSquare.props.x;
-            y = nextSquare.props.y;
+            return 0;
         }
-        nextSquare.colorSquare(colors.end, 3);
+
+        stack.push(nextSquare);
+        nextSquare.setAsVisited();
+
+        if ((nextSquare.props.x !== this.xStart || nextSquare.props.y !== this.yStart) && (nextSquare.props.x !== this.xEnd || nextSquare.props.y !== this.yEnd)) {
+            nextSquare.colorSquare(colors.visited, 4);
+        }
+
+        x = nextSquare.props.x;
+        y = nextSquare.props.y;
+
+        this.x = x;
+        this.y = y;
+        this.nextSquare = this.nextSquare;
+        this.stack = stack;
+
+        if(this.x != this.xEnd || this.y != this.yEnd && this.stack.length > 0) {
+            console.log("Call 2");
+            setTimeout(function() {this.DFS2Loop()}.bind(this),this.interval);
+        } else {
+            console.log("Bye");
+        }
     }
 
     render() {
