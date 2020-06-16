@@ -8,7 +8,8 @@ class Square extends React.Component {
         this.state = {
             color: "white",
             mousedown: 0,
-            squareStatus: 0, //0 = empty, 1 = filled, 2 = start, 3 = end    
+            squareStatus: 0, //0 = empty, 1 = filled, 2 = start, 3 = end, 4 = visited
+            visited: 0, 
         };
         this.handleOnMouseDown = this.handleOnMouseDown.bind(this);
         this.handleOnMouseEnter = this.handleOnMouseEnter.bind(this);
@@ -28,6 +29,12 @@ class Square extends React.Component {
         this.setState({
             color: color,
             colorStatus: squareStatus,
+        });
+    }
+
+    setAsVisited() {
+        this.setState({
+            visited: 1,
         });
     }
 

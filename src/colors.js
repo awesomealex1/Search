@@ -3,4 +3,5 @@ export const colors = {
     filled: "black",
     start: "green",
     end: "red",
+    visited: "grey",
 };
