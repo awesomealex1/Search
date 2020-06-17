@@ -41,7 +41,7 @@ class Grid extends React.Component {
         });
         this.setStartSquare(10,10);
         this.setEndSquare(4,4);
-        this.startSearch(1,1);
+        this.startSearch(1);
     }
 
     handleMouseUp() {
@@ -77,7 +77,7 @@ class Grid extends React.Component {
         return this.grid.get(x.toString() + "-" + y.toString());
     }
 
-    startSearch(timeInterval,algorithm) {
+    startSearch(timeInterval) {
         var xStart = this.start.props.x;
         var yStart = this.start.props.y;
         this.interval = timeInterval;
