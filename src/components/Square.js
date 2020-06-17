@@ -1,5 +1,6 @@
 import React from 'react';
 import {MouseDownContext} from './context.js'
+import {colors} from './../colors.js'
 
 class Square extends React.Component {
 
@@ -35,6 +36,19 @@ class Square extends React.Component {
     setAsVisited() {
         this.setState({
             visited: 1,
+        });
+    }
+
+    highlight() {
+        this.normalColor = this.state.color;
+        this.setState({
+            color: colors.highlighted,
+        });
+    }
+
+    unhighlight() {
+        this.setState({
+            color: this.normalColor,
         });
     }
 

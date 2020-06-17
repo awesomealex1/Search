@@ -86,51 +86,39 @@ class Grid extends React.Component {
     }
 
     BFS(x,y) {
-        this.x = x;
-        this.y = y;
-        this.queue = [];
-        this.queue.push(this.getSquare(x,y));
-        this.getSquare(x,y).setAsVisited();
-
-        if(this.queue.length > 0) {
-            this.BFSLoop();
+        var queue = [];
+        var start = this.getSquare(x,y);
+        queue.push(start);
+        start.setAsVisited();
+        this.highlightedSquares = [];
+        this.highlightedSquares.push(start);
+        this.highlightedSquares[0].highlight();
+        if(queue.length > 0) {
+            this.BFSLoop(queue);
         }
     }
 
-    BFSLoop() {
-        this.square = this.queue.shift();
-        if(this.square.props.x === this.xEnd && this.square.props.y === this.yEnd) {
+    BFSLoop(queue) {
+        var square = queue.shift();
+        if(square.props.x === this.xEnd && square.props.y === this.yEnd) {
             return 0;
         }
-        var adj = this.AdjacentSquares(this.square);
+        var adj = this.AdjacentSquares(square);
+        for (var i = 0; i < this.highlightedSquares.length; i++) {
+            this.highlightedSquares[i].unhighlight();
+        }
+        this.highlightedSquares = [];
         for (var i = 0; i < adj.length; i++) {
             if(adj[i].props.x === this.xEnd && adj[i].props.y === this.yEnd) {
                 return 0;
             }
             adj[i].setAsVisited();
-            this.queue.push(adj[i]);
+            queue.push(adj[i]);
             adj[i].colorSquare(colors.visited, 4);
+            this.highlightedSquares.push(adj[i]);
+            adj[i].highlight();
         }
-        setTimeout(function() {this.BFSLoop()}.bind(this),this.interval);
-    }
-
-    AdjacentSquares(square) {
-        var x = square.props.x;
-        var y = square.props.y;
-        var adj = [];
-        if (this.getSquare(x+1,y) !== undefined && this.getSquare(x+1,y).state.visited === 0) {
-            adj.push(this.getSquare(x+1,y));
-        }
-        if (this.getSquare(x-1,y) !== undefined && this.getSquare(x-1,y).state.visited === 0) {
-            adj.push(this.getSquare(x-1,y));
-        }
-        if (this.getSquare(x,y+1) !== undefined && this.getSquare(x,y+1).state.visited === 0) {
-            adj.push(this.getSquare(x,y+1));
-        }
-        if (this.getSquare(x,y-1) !== undefined && this.getSquare(x,y-1).state.visited === 0) {
-            adj.push(this.getSquare(x,y-1));
-        }
-        return adj;
+        setTimeout(function(queue) {this.BFSLoop(queue)}.bind(this),this.interval,queue);
     }
 
 /*  Implementation of DFS using recursion (hard to add settimeout to it)
@@ -176,46 +164,75 @@ class Grid extends React.Component {
     DFS(x,y) {
         var stack = [];
         stack.push(this.getSquare(x,y));
-        var nextSquare = this.getSquare(x,y);
-        nextSquare.setAsVisited();
-
+        var start = this.getSquare(x,y);
+        start.setAsVisited();
+        this.highlightedSquares = [];
+        this.highlightedSquares.push(start);
+        this.highlightedSquares[0].highlight();
         if(x != this.xEnd || y != this.yEnd && this.stack.length > 0) {
-            this.DFSLoop(x,y,nextSquare,stack);
+            this.DFSLoop(x,y,start,stack);
         }
     }
 
-    DFSLoop(x,y,nextSquare,stack) {
-        console.log(x,y,nextSquare,stack);
-        var adj = this.AdjacentSquares(nextSquare)
+    DFSLoop(x,y,square,stack) {
+        var adj = this.AdjacentSquares(square)
         if (adj.length > 0) {
-            nextSquare = adj[0];
+            square = adj[0];
         } else {
+            this.highlightedSquares[0].unhighlight();
+            this.highlightedSquares = [];
             var top = stack.pop();
             var tmp = stack.pop();
+            this.highlightedSquares.push(tmp);
+            this.highlightedSquares[0].highlight();
             top.colorSquare(colors.empty, 0);
             x = tmp.props.x;
             y = tmp.props.y;
             stack.push(tmp);
-            nextSquare = tmp;
+            square = tmp;
             if(x != this.xEnd || y != this.yEnd && stack.length > 0) {
-                setTimeout(function(x,y,nextSquare,stack) {this.DFSLoop(x,y,nextSquare,stack)}.bind(this),this.interval,x,y,nextSquare,stack);
+                setTimeout(function(x,y,square,stack) {this.DFSLoop(x,y,square,stack)}.bind(this),this.interval,x,y,square,stack);
             }
             return 0;
         }
 
-        stack.push(nextSquare);
-        nextSquare.setAsVisited();
+        stack.push(square);
+        square.setAsVisited();
 
-        if ((nextSquare.props.x !== this.xStart || nextSquare.props.y !== this.yStart) && (nextSquare.props.x !== this.xEnd || nextSquare.props.y !== this.yEnd)) {
-            nextSquare.colorSquare(colors.visited, 4);
+        if ((square.props.x !== this.xStart || square.props.y !== this.yStart) && (square.props.x !== this.xEnd || square.props.y !== this.yEnd)) {
+            square.colorSquare(colors.visited, 4);
         }
 
-        x = nextSquare.props.x;
-        y = nextSquare.props.y;
+        this.highlightedSquares[0].unhighlight();
+        this.highlightedSquares = [];
+
+        x = square.props.x;
+        y = square.props.y;
 
         if(x != this.xEnd || y != this.yEnd && stack.length > 0) {
-            setTimeout(function(x,y,nextSquare,stack) {this.DFSLoop(x,y,nextSquare,stack)}.bind(this),this.interval,x,y,nextSquare,stack);
+            this.highlightedSquares.push(square);
+            this.highlightedSquares[0].highlight();
+            setTimeout(function(x,y,square,stack) {this.DFSLoop(x,y,square,stack)}.bind(this),this.interval,x,y,square,stack);
         }
+    }
+
+    AdjacentSquares(square) {
+        var x = square.props.x;
+        var y = square.props.y;
+        var adj = [];
+        if (this.getSquare(x+1,y) !== undefined && this.getSquare(x+1,y).state.visited === 0) {
+            adj.push(this.getSquare(x+1,y));
+        }
+        if (this.getSquare(x-1,y) !== undefined && this.getSquare(x-1,y).state.visited === 0) {
+            adj.push(this.getSquare(x-1,y));
+        }
+        if (this.getSquare(x,y+1) !== undefined && this.getSquare(x,y+1).state.visited === 0) {
+            adj.push(this.getSquare(x,y+1));
+        }
+        if (this.getSquare(x,y-1) !== undefined && this.getSquare(x,y-1).state.visited === 0) {
+            adj.push(this.getSquare(x,y-1));
+        }
+        return adj;
     }
 
     render() {
