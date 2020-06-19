@@ -20,6 +20,10 @@ class Grid extends React.Component {
         this.handleMouseDown = this.handleMouseDown.bind(this);
         this.handleMouseUp = this.handleMouseUp.bind(this);
         this.setSquareInGrid = this.setSquareInGrid.bind(this);
+        this.startSearch = this.startSearch.bind(this);
+        this.setStartSquare = this.setStartSquare.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
+        this.setEndSquare = this.setEndSquare.bind(this);
     }
 
     componentDidMount() {
@@ -32,7 +36,7 @@ class Grid extends React.Component {
     handleWindowResize = () => {
         this.setState({ 
             width: window.innerWidth - 4,
-            height: window.innerHeight - 4,
+            height: window.innerHeight - 4 - 35,
          });
     }
 
@@ -40,9 +44,7 @@ class Grid extends React.Component {
         this.setState({
             mousedown: 1,
         });
-        this.setStartSquare(10,10);
-        this.setEndSquare(4,4);
-        this.startSearch(1,"BFS");
+        
     }
 
     handleMouseUp() {
@@ -78,7 +80,15 @@ class Grid extends React.Component {
         return this.grid.get(x.toString() + "-" + y.toString());
     }
 
+    handleSearch(timeInterval,algorithm) {
+        this.setStartSquare(10,10);
+        this.setEndSquare(4,4);
+        setTimeout(function(timeInterval,algorithm) {this.startSearch(timeInterval,algorithm)}.bind(this),50,timeInterval,algorithm);
+    }
+
     startSearch(timeInterval,algorithm) {
+        this.setStartSquare(10,10);
+        this.setEndSquare(4,4);
         var xStart = this.start.props.x;
         var yStart = this.start.props.y;
         this.interval = timeInterval;
@@ -270,7 +280,7 @@ class Grid extends React.Component {
 
         return (
             <div>
-            <Toolbar></Toolbar>
+            <Toolbar handleSearch={this.handleSearch}></Toolbar>
             <MouseDownContext.Provider value={context_value}>
             <div className="grid">
                 {columns}

@@ -10,12 +10,14 @@ class Toolbar extends React.Component {
     render() {
         return (
             <div>
-                <button>Start</button>
+                <button onClick={() => this.props.handleSearch(1,"BFS")}>Search</button>
                 <select>
-                    <option>DFS</option>
-                    <option>BFS</option>
+                    <option value="DFS">DFS</option>
+                    <option value="BFS">BFS</option>
                 </select>
                 <label>Square Size:</label>
+                <input type="range" min="1" max="10" value="2"></input>
+                <label>Speed:</label>
                 <input type="range" min="1" max="10" value="2"></input>
             </div>
         );
