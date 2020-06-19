@@ -77,12 +77,18 @@ class Grid extends React.Component {
         return this.grid.get(x.toString() + "-" + y.toString());
     }
 
-    startSearch(timeInterval) {
+    startSearch(timeInterval,algorithm) {
         var xStart = this.start.props.x;
         var yStart = this.start.props.y;
         this.interval = timeInterval;
         console.log("search started");
-        this.DFS(xStart,yStart);
+        if (algorithm === "BFS") {
+            this.BFS(xStart,yStart);
+        } else if (algorithm === "DFS") {
+            this.DFS(xStart,yStart);
+        } else {
+            console.log("No algorithm selected");
+        }
     }
 
     BFS(x,y) {
