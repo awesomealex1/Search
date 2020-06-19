@@ -1,6 +1,7 @@
 import React from 'react';
 import './Grid.scss'
 import Column from './Column.js'
+import Toolbar from './Toolbar.js'
 import {MouseDownContext} from './context.js'
 import {colors} from './../colors.js'
 
@@ -41,7 +42,7 @@ class Grid extends React.Component {
         });
         this.setStartSquare(10,10);
         this.setEndSquare(4,4);
-        this.startSearch(1);
+        this.startSearch(1,"BFS");
     }
 
     handleMouseUp() {
@@ -268,11 +269,14 @@ class Grid extends React.Component {
         }
 
         return (
+            <div>
+            <Toolbar></Toolbar>
             <MouseDownContext.Provider value={context_value}>
             <div className="grid">
                 {columns}
             </div>
             </MouseDownContext.Provider>
+            </div>
         );
     }
 }
