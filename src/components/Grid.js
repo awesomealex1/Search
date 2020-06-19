@@ -14,6 +14,7 @@ class Grid extends React.Component {
             height: 0,
             mousedown: 0,
             color: colors.filled,
+            squareSize: 19,
         }
         this.test = 0
         this.grid = new Map();
@@ -21,9 +22,8 @@ class Grid extends React.Component {
         this.handleMouseUp = this.handleMouseUp.bind(this);
         this.setSquareInGrid = this.setSquareInGrid.bind(this);
         this.startSearch = this.startSearch.bind(this);
-        this.setStartSquare = this.setStartSquare.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
-        this.setEndSquare = this.setEndSquare.bind(this);
+        this.handleSquareResize = this.handleSquareResize.bind(this);
     }
 
     componentDidMount() {
@@ -38,6 +38,12 @@ class Grid extends React.Component {
             width: window.innerWidth - 4,
             height: window.innerHeight - 4 - 35,
          });
+    }
+
+    handleSquareResize(size) {
+        this.setState({
+            squareSize: size,
+        });
     }
 
     handleMouseDown() {
@@ -253,23 +259,23 @@ class Grid extends React.Component {
     }
 
     render() {
-        const squareSize = 19;  //Square height and width [px]
+        //const squareSize = 19;  //Square height and width [px]
 
-        var nColumns = Math.floor(this.state.width/squareSize);
-        var nSquares = Math.floor(this.state.height/squareSize);
+        var nColumns = Math.floor(this.state.width/this.state.squareSize);
+        var nSquares = Math.floor(this.state.height/this.state.squareSize);
 
-        var nWiderCols = this.state.width % squareSize
-        var nHigherSquares = this.state.height % squareSize;
+        var nWiderCols = this.state.width % this.state.squareSize;
+        var nHigherSquares = this.state.height % this.state.squareSize;
 
         var columns = [];
         var column;
 
         for (var i = 0; i < nWiderCols; i++) {
-            column = <Column key={i} x={i} nSquares={nSquares} nHigherSquares={nHigherSquares} squareSize={squareSize} wider={true} setSquareInGrid={this.setSquareInGrid}/>;
+            column = <Column key={i} x={i} nSquares={nSquares} nHigherSquares={nHigherSquares} squareSize={this.state.squareSize} wider={true} setSquareInGrid={this.setSquareInGrid}/>;
             columns.push(column);
         }
         for (i = 0; i < nColumns - nWiderCols; i++) {
-            column = <Column key={i+nWiderCols} x={i+nWiderCols} nSquares={nSquares} nHigherSquares={nHigherSquares} squareSize={squareSize} wider={false} setSquareInGrid={this.setSquareInGrid}/>;
+            column = <Column key={i+nWiderCols} x={i+nWiderCols} nSquares={nSquares} nHigherSquares={nHigherSquares} squareSize={this.state.squareSize} wider={false} setSquareInGrid={this.setSquareInGrid}/>;
             columns.push(column);
         }
 
@@ -280,7 +286,7 @@ class Grid extends React.Component {
 
         return (
             <div>
-            <Toolbar handleSearch={this.handleSearch}></Toolbar>
+            <Toolbar handleSearch={this.handleSearch} handleSquareResize={this.handleSquareResize}></Toolbar>
             <MouseDownContext.Provider value={context_value}>
             <div className="grid">
                 {columns}

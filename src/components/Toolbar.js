@@ -9,12 +9,17 @@ class Toolbar extends React.Component {
             algorithm: "BFS",   //Defaultvalue in select
         }
         this.handleAlgorithmChange = this.handleAlgorithmChange.bind(this);
+        this.handleSquareSizeChange = this.handleSquareSizeChange.bind(this);
     }
 
     handleAlgorithmChange(event) {
         this.setState({
             algorithm: event.target.value,
         });
+    }
+
+    handleSquareSizeChange(event) {
+        this.props.handleSquareResize(event.target.value);
     }
 
     render() {
@@ -26,9 +31,9 @@ class Toolbar extends React.Component {
                     <option value="BFS">BFS</option>
                 </select>
                 <label>Square Size:</label>
-                <input type="range" min="1" max="10" defaultValue="2"></input>
+                <input type="range" min="18" max="50" defaultValue="19" onChange={this.handleSquareSizeChange}></input>
                 <label>Speed:</label>
-                <input type="range" min="1" max="10" defaultValue="2"></input>
+                <input type="range" min="1" max="2" defaultValue="1"></input>
             </div>
         );
     }

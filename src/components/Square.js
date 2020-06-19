@@ -10,7 +10,7 @@ class Square extends React.Component {
             color: "white",
             mousedown: 0,
             squareStatus: 0, //0 = empty, 1 = filled, 2 = start, 3 = end, 4 = visited
-            visited: 0, 
+            visited: 0,
         };
         this.handleOnMouseDown = this.handleOnMouseDown.bind(this);
         this.handleOnMouseEnter = this.handleOnMouseEnter.bind(this);
@@ -54,8 +54,15 @@ class Square extends React.Component {
 
     render() {
         this.props.setSquareInGrid(this.props.x, this.props.y, this);
+        var height = +this.props.size + (this.props.higher ? 1 : 0);
+        var width = +this.props.size + (this.props.wider ? 1 : 0);
         return(
-            <div onMouseDown={this.handleOnMouseDown} onMouseEnter={this.handleOnMouseEnter} style={{backgroundColor: this.state.color}} className={this.props.higher === true ? this.props.wider === true ? "higherAndWiderSquare": "higherSquare" : this.props.wider === true ? "widerSquare" : "normalSquare"}></div>
+            <div onMouseDown={this.handleOnMouseDown} onMouseEnter={this.handleOnMouseEnter} style={{
+                backgroundColor: this.state.color,
+                height: height,
+                width: width,
+            }} //className={this.props.higher === true ? this.props.wider === true ? "higherAndWiderSquare": "higherSquare" : this.props.wider === true ? "widerSquare" : "normalSquare"}
+            className="normalSquare"></div>
         );
     }
 }
