@@ -16,6 +16,10 @@ class Square extends React.Component {
         this.handleOnMouseEnter = this.handleOnMouseEnter.bind(this);
     }
 
+    componentWillUnmount() {
+        this.props.removeSquareFromGrid(this.props.x, this.props.y, this);
+    }
+
     handleOnMouseEnter() {
         if (this.context.mousedown === 1) {
             this.colorSquare();
@@ -53,15 +57,16 @@ class Square extends React.Component {
     }
 
     render() {
-        this.props.setSquareInGrid(this.props.x, this.props.y, this);
-        var height = +this.props.size + (this.props.higher ? 1 : 0);
-        var width = +this.props.size + (this.props.wider ? 1 : 0);
+        this.props.addSquareToGrid(this.props.x, this.props.y, this);
+        var width = this.props.width;
+        var height = this.props.height;
+
         return(
             <div onMouseDown={this.handleOnMouseDown} onMouseEnter={this.handleOnMouseEnter} style={{
                 backgroundColor: this.state.color,
                 height: height,
                 width: width,
-            }} //className={this.props.higher === true ? this.props.wider === true ? "higherAndWiderSquare": "higherSquare" : this.props.wider === true ? "widerSquare" : "normalSquare"}
+            }}
             className="normalSquare"></div>
         );
     }

@@ -14,13 +14,14 @@ class Grid extends React.Component {
             height: 0,
             mousedown: 0,
             color: colors.filled,
-            squareSize: 19,
+            squareSize: 50,
         }
         this.test = 0
         this.grid = new Map();
         this.handleMouseDown = this.handleMouseDown.bind(this);
         this.handleMouseUp = this.handleMouseUp.bind(this);
-        this.setSquareInGrid = this.setSquareInGrid.bind(this);
+        this.addSquareToGrid = this.addSquareToGrid.bind(this);
+        this.removeSquareFromGrid = this.removeSquareFromGrid.bind(this);
         this.startSearch = this.startSearch.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleSquareResize = this.handleSquareResize.bind(this);
@@ -36,7 +37,7 @@ class Grid extends React.Component {
     handleWindowResize = () => {
         this.setState({ 
             width: window.innerWidth - 4,
-            height: window.innerHeight - 4 - 35,
+            height: window.innerHeight - 4 - 34,    //4 : square borders, 35 : taskbar height
          });
     }
 
@@ -59,7 +60,11 @@ class Grid extends React.Component {
         });
     }
 
-    setSquareInGrid(x,y,val) {
+    removeSquareFromGrid(x,y) {
+        this.grid.delete(x.toString() + "-" + y.toString());
+    }
+
+    addSquareToGrid(x,y,val) {
         this.grid.set(x.toString() + "-" + y.toString(),val);
     }
 
@@ -259,23 +264,28 @@ class Grid extends React.Component {
     }
 
     render() {
-        //const squareSize = 19;  //Square height and width [px]
+        console.log("render");
+        var nColumns = Math.floor(this.state.width/(this.state.squareSize+1));  //Add 1 to account for borders
+        var nRows = Math.floor(this.state.height/(this.state.squareSize+1)); //Squares per column
+        
+        var extraWidthValue = Math.floor((this.state.width%(this.state.squareSize+1))/nColumns);
+        var extraHeightValue = Math.floor((this.state.height%(this.state.squareSize+1))/nRows);
 
-        var nColumns = Math.floor(this.state.width/this.state.squareSize);
-        var nSquares = Math.floor(this.state.height/this.state.squareSize);
+        var nExtraWidth = (this.state.width%(this.state.squareSize+1))%nColumns;
+        var nExtraHeight = (this.state.height%(this.state.squareSize+1))%nRows;
 
-        var nWiderCols = this.state.width % this.state.squareSize;
-        var nHigherSquares = this.state.height % this.state.squareSize;
+        var nNormalWidth = nColumns - nExtraWidth;
+        var nNormalHeight = nRows - nExtraHeight;
 
         var columns = [];
         var column;
 
-        for (var i = 0; i < nWiderCols; i++) {
-            column = <Column key={i} x={i} nSquares={nSquares} nHigherSquares={nHigherSquares} squareSize={this.state.squareSize} wider={true} setSquareInGrid={this.setSquareInGrid}/>;
+        for (var i = 0; i < nExtraWidth; i++) {
+            column = <Column key={i} x={i} nNormalSquares={nNormalHeight} nHigherSquares={nExtraHeight} extraHeightValue={extraHeightValue} squareSize={this.state.squareSize} width={this.state.squareSize+extraWidthValue+1} addSquareToGrid={this.addSquareToGrid} removeSquareFromGrid={this.removeSquareFromGrid}/>;
             columns.push(column);
         }
-        for (i = 0; i < nColumns - nWiderCols; i++) {
-            column = <Column key={i+nWiderCols} x={i+nWiderCols} nSquares={nSquares} nHigherSquares={nHigherSquares} squareSize={this.state.squareSize} wider={false} setSquareInGrid={this.setSquareInGrid}/>;
+        for (i = 0; i < nNormalWidth; i++) {
+            column = <Column key={i+nExtraWidth} x={i+nExtraWidth} nNormalSquares={nNormalHeight} nHigherSquares={nExtraHeight} extraHeightValue={extraHeightValue} squareSize={this.state.squareSize} width={this.state.squareSize+extraWidthValue} addSquareToGrid={this.addSquareToGrid} removeSquareFromGrid={this.removeSquareFromGrid}/>;
             columns.push(column);
         }
 

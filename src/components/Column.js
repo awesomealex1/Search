@@ -9,11 +9,11 @@ class Column extends React.Component {
 
     render() {
         var squares = [];
-        for (var i = 0; i < this.props.nHigherSquares; i++) {
-            squares.push(<Square key={this.props.x.toString() + "-" + i.toString()} x={this.props.x} y={i} higher={true} wider={this.props.wider} setSquareInGrid={this.props.setSquareInGrid} size={this.props.squareSize}/>);
+        for (var i = 0; i < this.props.nNormalSquares; i++) {
+            squares.push(<Square key={this.props.x.toString() + "-" + i.toString()} x={this.props.x} y={i} addSquareToGrid={this.props.addSquareToGrid} removeSquareFromGrid={this.props.removeSquareFromGrid} height={this.props.squareSize+this.props.extraHeightValue} width={this.props.width}/>);
         }
-        for (i = 0; i < this.props.nSquares - this.props.nHigherSquares; i++) {
-            squares.push(<Square key={this.props.x.toString() + "-" + (i + this.props.nHigherSquares).toString()} x={this.props.x} y={i+this.props.nHigherSquares} higher={false} wider={this.props.wider} setSquareInGrid={this.props.setSquareInGrid} size={this.props.squareSize}/>);
+        for (i = 0; i < this.props.nHigherSquares; i++) {
+            squares.push(<Square key={this.props.x.toString() + "-" + (i + this.props.nNormalSquares).toString()} x={this.props.x} y={i+this.props.nNormalSquares} addSquareToGrid={this.props.addSquareToGrid} removeSquareFromGrid={this.props.removeSquareFromGrid} height={this.props.squareSize+this.props.extraHeightValue+1} width={this.props.width}/>);
         }
         return(
             <div className="column">

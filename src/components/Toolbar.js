@@ -19,7 +19,7 @@ class Toolbar extends React.Component {
     }
 
     handleSquareSizeChange(event) {
-        this.props.handleSquareResize(event.target.value);
+        this.props.handleSquareResize(parseInt(event.target.value));
     }
 
     render() {
@@ -31,7 +31,7 @@ class Toolbar extends React.Component {
                     <option value="BFS">BFS</option>
                 </select>
                 <label>Square Size:</label>
-                <input type="range" min="18" max="50" defaultValue="19" onChange={this.handleSquareSizeChange}></input>
+                <input type="range" min="20" max="200" defaultValue="50" onChange={this.handleSquareSizeChange}></input>
                 <label>Speed:</label>
                 <input type="range" min="1" max="2" defaultValue="1"></input>
             </div>
