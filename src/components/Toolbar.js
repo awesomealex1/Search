@@ -10,6 +10,7 @@ class Toolbar extends React.Component {
         }
         this.handleAlgorithmChange = this.handleAlgorithmChange.bind(this);
         this.handleSquareSizeChange = this.handleSquareSizeChange.bind(this);
+        this.handleIntervalChange = this.handleIntervalChange.bind(this);
     }
 
     handleAlgorithmChange(event) {
@@ -22,10 +23,14 @@ class Toolbar extends React.Component {
         this.props.handleSquareResize(parseInt(event.target.value));
     }
 
+    handleIntervalChange(event) {
+        this.props.handleIntervalChange(parseInt(event.target.value))
+    }
+
     render() {
         return (
             <div>
-                <button onClick={() => this.props.handleSearch(1,this.state.algorithm)}>Search</button>
+                <button onClick={() => this.props.handleSearch(this.state.algorithm)}>Search</button>
                 <select defaultValue={this.state.algorithm} onChange={this.handleAlgorithmChange}>
                     <option value="DFS">DFS</option>
                     <option value="BFS">BFS</option>
@@ -33,7 +38,7 @@ class Toolbar extends React.Component {
                 <label>Square Size:</label>
                 <input type="range" min="20" max="200" defaultValue="50" onChange={this.handleSquareSizeChange}></input>
                 <label>Speed:</label>
-                <input type="range" min="1" max="2" defaultValue="1"></input>
+                <input type="range" min="1" max="1000" defaultValue="1" onChange={this.handleIntervalChange}></input>
             </div>
         );
     }

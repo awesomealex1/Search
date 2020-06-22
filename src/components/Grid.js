@@ -15,6 +15,7 @@ class Grid extends React.Component {
             mousedown: 0,
             color: colors.filled,
             squareSize: 50,
+            interval: 1,
         }
         this.test = 0
         this.grid = new Map();
@@ -25,6 +26,7 @@ class Grid extends React.Component {
         this.startSearch = this.startSearch.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleSquareResize = this.handleSquareResize.bind(this);
+        this.handleIntervalChange = this.handleIntervalChange.bind(this);
     }
 
     componentDidMount() {
@@ -44,6 +46,12 @@ class Grid extends React.Component {
     handleSquareResize(size) {
         this.setState({
             squareSize: size,
+        });
+    }
+
+    handleIntervalChange(interval) {
+        this.setState({
+            interval: interval,
         });
     }
 
@@ -91,18 +99,18 @@ class Grid extends React.Component {
         return this.grid.get(x.toString() + "-" + y.toString());
     }
 
-    handleSearch(timeInterval,algorithm) {
+    handleSearch(algorithm) {
         this.setStartSquare(10,10);
         this.setEndSquare(4,4);
-        setTimeout(function(timeInterval,algorithm) {this.startSearch(timeInterval,algorithm)}.bind(this),50,timeInterval,algorithm);
+        setTimeout(function(algorithm) {this.startSearch(algorithm)}.bind(this),this.state.interval,algorithm);
     }
 
-    startSearch(timeInterval,algorithm) {
+    startSearch(algorithm) {
         this.setStartSquare(10,10);
         this.setEndSquare(4,4);
         var xStart = this.start.props.x;
         var yStart = this.start.props.y;
-        this.interval = timeInterval;
+        this.interval = this.state.interval;
         console.log("search started");
         if (algorithm === "BFS") {
             this.BFS(xStart,yStart);
@@ -296,7 +304,7 @@ class Grid extends React.Component {
 
         return (
             <div>
-            <Toolbar handleSearch={this.handleSearch} handleSquareResize={this.handleSquareResize}></Toolbar>
+            <Toolbar handleSearch={this.handleSearch} handleSquareResize={this.handleSquareResize} handleIntervalChange={this.handleIntervalChange}></Toolbar>
             <MouseDownContext.Provider value={context_value}>
             <div className="grid">
                 {columns}
