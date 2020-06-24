@@ -110,7 +110,6 @@ class Grid extends React.Component {
         this.setEndSquare(4,4);
         var xStart = this.start.props.x;
         var yStart = this.start.props.y;
-        this.interval = this.state.interval;
         console.log("search started");
         if (algorithm === "BFS") {
             this.BFS(xStart,yStart);
@@ -154,7 +153,7 @@ class Grid extends React.Component {
             this.highlightedSquares.push(adj[i]);
             adj[i].highlight();
         }
-        setTimeout(function(queue) {this.BFSLoop(queue)}.bind(this),this.interval,queue);
+        setTimeout(function(queue) {this.BFSLoop(queue)}.bind(this),this.state.interval,queue);
     }
 
 /*  Implementation of DFS using recursion (hard to add settimeout to it)
@@ -227,7 +226,7 @@ class Grid extends React.Component {
             stack.push(tmp);
             square = tmp;
             if(x != this.xEnd || y != this.yEnd && stack.length > 0) {
-                setTimeout(function(x,y,square,stack) {this.DFSLoop(x,y,square,stack)}.bind(this),this.interval,x,y,square,stack);
+                setTimeout(function(x,y,square,stack) {this.DFSLoop(x,y,square,stack)}.bind(this),this.state.interval,x,y,square,stack);
             }
             return 0;
         }
@@ -248,7 +247,7 @@ class Grid extends React.Component {
         if(x != this.xEnd || y != this.yEnd && stack.length > 0) {
             this.highlightedSquares.push(square);
             this.highlightedSquares[0].highlight();
-            setTimeout(function(x,y,square,stack) {this.DFSLoop(x,y,square,stack)}.bind(this),this.interval,x,y,square,stack);
+            setTimeout(function(x,y,square,stack) {this.DFSLoop(x,y,square,stack)}.bind(this),this.state.interval,x,y,square,stack);
         }
     }
 
