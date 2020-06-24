@@ -5,4 +5,5 @@ export const colors = {
     start: "green",
     end: "red",
     visited: "grey",
+    visited2: "lightgrey"
 };

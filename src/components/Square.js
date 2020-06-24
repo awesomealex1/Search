@@ -47,9 +47,10 @@ class Square extends React.Component {
         this.unhighlightedColor = normalColor;
     }
 
-    colorSquare(color=this.context.color) {
+    colorSquare(color=this.context.color,squareType=0) {
         this.setState({
             color: color,
+            squareType: squareType,
         });
     }
 

@@ -34,6 +34,7 @@ class Grid extends React.Component {
         document.addEventListener('mousedown', this.handleMouseDown);
         document.addEventListener('mouseup', this.handleMouseUp);
         this.handleWindowResize();
+        setTimeout(function() {this.prepareGrid(true)}.bind(this),500);
     }
 
     handleWindowResize = () => {
@@ -76,20 +77,20 @@ class Grid extends React.Component {
         this.grid.set(x.toString() + "-" + y.toString(),val);
     }
 
-    colorSquare(x,y,color=this.state.color,squareStatus=1) {
+    colorSquare(x,y,color=this.state.color,squareType=0) {
         var square = this.getSquare(x,y);
-        square.colorSquare(color,squareStatus);
+        square.colorSquare(color,squareType);
     }
 
     setStartSquare(x,y) {
-        this.colorSquare(x,y,colors.start);
+        this.colorSquare(x,y,colors.start,2);
         this.start = this.getSquare(x,y);
         this.xStart = x;
         this.yStart = y;
     }
 
     setEndSquare(x,y) {
-        this.colorSquare(x,y,colors.end);
+        this.colorSquare(x,y,colors.end,3);
         this.end = this.getSquare(x,y);
         this.xEnd = x;
         this.yEnd = y;
@@ -99,25 +100,26 @@ class Grid extends React.Component {
         return this.grid.get(x.toString() + "-" + y.toString());
     }
 
-    prepareGrid() {
+    prepareGrid(firstRun) {
         var values = this.grid.values();
         for (var square of values) {
             square.setAsUnvisited();
             square.resetColor();
         }
         this.highlightedSquares = [];
+
+        if (firstRun) {
+            this.setStartSquare(10,10);
+            this.setEndSquare(15,10);
+        }
     }
 
     handleSearch(algorithm) {
-        this.setStartSquare(10,10);
-        this.setEndSquare(4,4);
-        this.prepareGrid();
+        this.prepareGrid(false);
         setTimeout(function(algorithm) {this.startSearch(algorithm)}.bind(this),this.state.interval,algorithm);
     }
 
     startSearch(algorithm) {
-        this.setStartSquare(10,10);
-        this.setEndSquare(4,4);
         var xStart = this.start.props.x;
         var yStart = this.start.props.y;
         console.log("search started");
@@ -160,7 +162,7 @@ class Grid extends React.Component {
             }
             adj[i].setAsVisited();
             queue.push(adj[i]);
-            adj[i].colorSquare(colors.visited, 4);
+            adj[i].colorSquare(colors.visited);
             this.highlightedSquares.push(adj[i]);
             adj[i].highlight();
         }
@@ -171,14 +173,14 @@ class Grid extends React.Component {
     DFSRecursive(x,y,xEnd,yEnd) {
 
         if (x === xEnd && y === yEnd) {
-            this.getSquare(x,y).colorSquare(colors.end, 3);
+            this.getSquare(x,y).colorSquare(colors.end);
             return 1
         }
 
         var square = this.getSquare(x,y);;
 
         if (square.props.x !== 10 || square.props.y !== 10) {
-            square.colorSquare(colors.visited, 4);
+            square.colorSquare(colors.visited);
         }
 
         square.setAsVisited();
@@ -202,7 +204,7 @@ class Grid extends React.Component {
             if (this.DFS(nextSquare.props.x,nextSquare.props.y,xEnd,yEnd) === 1) {
                 return 1
             } else {
-                nextSquare.colorSquare(colors.empty, 0);
+                nextSquare.colorSquare(colors.empty);
             }
         }
     }
@@ -231,7 +233,7 @@ class Grid extends React.Component {
             var tmp = stack.pop();
             this.highlightedSquares.push(tmp);
             this.highlightedSquares[0].highlight();
-            top.colorSquare(colors.empty, 0);
+            top.colorSquare(colors.visited2);
             x = tmp.props.x;
             y = tmp.props.y;
             stack.push(tmp);
@@ -246,7 +248,7 @@ class Grid extends React.Component {
         square.setAsVisited();
 
         if ((square.props.x !== this.xStart || square.props.y !== this.yStart) && (square.props.x !== this.xEnd || square.props.y !== this.yEnd)) {
-            square.colorSquare(colors.visited, 4);
+            square.colorSquare(colors.visited);
         }
 
         this.highlightedSquares[0].unhighlight();
