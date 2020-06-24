@@ -1,6 +1,6 @@
 export const colors = {
     empty: "white",
-    filled: "black",
+    wall: "black",
     highlighted: "yellow",
     start: "green",
     end: "red",

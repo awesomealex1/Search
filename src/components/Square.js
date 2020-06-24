@@ -7,9 +7,9 @@ class Square extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            color: "white",
+            color: colors.empty,
             mousedown: 0,
-            squareType: 0,
+            squareType: 0,  //0 = Empty, 1 = Wall, 2 = Start, 3 = End
             visited: 0,
         };
         this.handleOnMouseDown = this.handleOnMouseDown.bind(this);
@@ -30,6 +30,23 @@ class Square extends React.Component {
         this.colorSquare();
     }
 
+    resetColor() {
+        var normalColor;
+        if (this.state.squareType === 0) {
+            normalColor = colors.empty;
+        } else if (this.state.squareType === 1) {
+            normalColor = colors.wall;
+        } else if (this.state.squareType === 2) {
+            normalColor = colors.start;
+        } else if (this.state.squareType === 3) {
+            normalColor = colors.end;
+        }
+        this.setState({
+            color: normalColor,
+        });
+        this.unhighlightedColor = normalColor;
+    }
+
     colorSquare(color=this.context.color) {
         this.setState({
             color: color,
@@ -42,8 +59,14 @@ class Square extends React.Component {
         });
     }
 
+    setAsUnvisited() {
+        this.setState({
+            visited: 0,
+        });
+    }
+
     highlight() {
-        this.normalColor = this.state.color;
+        this.unhighlightedColor = this.state.color;
         this.setState({
             color: colors.highlighted,
         });
@@ -51,7 +74,7 @@ class Square extends React.Component {
 
     unhighlight() {
         this.setState({
-            color: this.normalColor,
+            color: this.unhighlightedColor,
         });
     }
 

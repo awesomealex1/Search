@@ -99,9 +99,19 @@ class Grid extends React.Component {
         return this.grid.get(x.toString() + "-" + y.toString());
     }
 
+    prepareGrid() {
+        var values = this.grid.values();
+        for (var square of values) {
+            square.setAsUnvisited();
+            square.resetColor();
+        }
+        this.highlightedSquares = [];
+    }
+
     handleSearch(algorithm) {
         this.setStartSquare(10,10);
         this.setEndSquare(4,4);
+        this.prepareGrid();
         setTimeout(function(algorithm) {this.startSearch(algorithm)}.bind(this),this.state.interval,algorithm);
     }
 
@@ -121,6 +131,7 @@ class Grid extends React.Component {
     }
 
     BFS(x,y) {
+        console.log(this.grid);
         var queue = [];
         var start = this.getSquare(x,y);
         queue.push(start);
