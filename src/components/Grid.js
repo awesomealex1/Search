@@ -82,14 +82,14 @@ class Grid extends React.Component {
     }
 
     setStartSquare(x,y) {
-        this.colorSquare(x,y,colors.start,2);
+        this.colorSquare(x,y,colors.start);
         this.start = this.getSquare(x,y);
         this.xStart = x;
         this.yStart = y;
     }
 
     setEndSquare(x,y) {
-        this.colorSquare(x,y,colors.end,3);
+        this.colorSquare(x,y,colors.end);
         this.end = this.getSquare(x,y);
         this.xEnd = x;
         this.yEnd = y;
