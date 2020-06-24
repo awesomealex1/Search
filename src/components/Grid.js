@@ -14,7 +14,7 @@ class Grid extends React.Component {
             height: 0,
             mousedown: 0,
             color: colors.filled,
-            squareSize: 50,
+            squareSize: 20,
             interval: 1,
         }
         this.test = 0
@@ -109,8 +109,10 @@ class Grid extends React.Component {
         this.highlightedSquares = [];
 
         if (firstRun) {
-            this.setStartSquare(10,10);
-            this.setEndSquare(15,10);
+            var x = Math.floor((this.state.width/(this.state.squareSize+1))/3);
+            var y = Math.floor((this.state.height/(this.state.squareSize+1))/2);
+            this.setStartSquare(x,y);
+            this.setEndSquare(2*x,y);
         }
     }
 
