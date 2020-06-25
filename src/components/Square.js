@@ -13,21 +13,51 @@ class Square extends React.Component {
             visited: 0,
         };
         this.handleOnMouseDown = this.handleOnMouseDown.bind(this);
+        this.handleOnMouseUp = this.handleOnMouseUp.bind(this);
         this.handleOnMouseEnter = this.handleOnMouseEnter.bind(this);
+        this.handleOnMouseLeave = this.handleOnMouseLeave.bind(this);
     }
 
     componentWillUnmount() {
         this.props.removeSquareFromGrid(this.props.x, this.props.y, this);
     }
 
+    handleOnMouseLeave() {
+        if (this.context.mousedown === 1 && (this.context.squareType === 2 || this.context.squareType === 3)) {
+            this.unsetAsStartOrEnd();
+        } 
+    }
+
     handleOnMouseEnter() {
+        console.log("1");
         if (this.context.mousedown === 1) {
-            this.colorSquare();
+            console.log(this.context.squareType);
+            if (this.context.squareType === 1 && this.state.squareType === 0) {
+                this.colorSquare(this.context.color,this.context.squareType);
+                
+            } else if (this.context.squareType === 2) {
+                this.setAsStartOrEnd(0);
+                this.context.setStartSquare(this.props.x,this.props.y);
+            } else if (this.context.squareType === 3) {
+                this.setAsStartOrEnd(1);
+                this.context.setEndSquare(this.props.x,this.props.y);
+            }
         }
     }
 
     handleOnMouseDown() {
-        this.colorSquare();
+        console.log(this.context.squareType);
+        if (this.state.squareType === 2 || this.state.squareType === 3) {
+            this.context.changeContextSquareType(this.state.squareType);
+        } else {
+            this.colorSquare();
+        }
+    }
+
+    handleOnMouseUp() {
+        if (this.context.squareType === 2 || this.context.squareType === 3) {
+            this.context.changeContextSquareType(1);
+        }
     }
 
     resetColor() {
@@ -66,6 +96,29 @@ class Square extends React.Component {
         });
     }
 
+    setAsStartOrEnd(x=0) {  //x = 0: Start, x = 1: End
+        this.colorBeforeStartOrEnd = this.state.color;
+        this.squareTypeBeforeStartOrEnd = this.state.squareType;
+        if (x === 0) {
+            this.setState({
+                color: colors.start,
+                squareType: 2,
+            });
+        } else if (x === 1) {
+            this.setState({
+                color: colors.end,
+                squareType: 3,
+            });
+        }
+    }
+
+    unsetAsStartOrEnd() {
+        this.setState({
+            color: this.colorBeforeStartOrEnd,
+            squareType: this.squareTypeBeforeStartOrEnd,
+        });
+    }
+
     highlight() {
         this.unhighlightedColor = this.state.color;
         this.setState({
@@ -85,7 +138,7 @@ class Square extends React.Component {
         var height = this.props.height;
 
         return(
-            <div onMouseDown={this.handleOnMouseDown} onMouseEnter={this.handleOnMouseEnter} style={{
+            <div onMouseDown={this.handleOnMouseDown} onMouseUp={this.handleOnMouseUp} onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave} style={{
                 backgroundColor: this.state.color,
                 height: height,
                 width: width,

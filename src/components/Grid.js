@@ -13,9 +13,10 @@ class Grid extends React.Component {
             width: 0,
             height: 0,
             mousedown: 0,
-            color: colors.filled,
-            squareSize: 20,
+            color: colors.wall,
+            squareSize: 50,
             interval: 1,
+            squareType: 1,
         }
         this.test = 0
         this.grid = new Map();
@@ -27,6 +28,9 @@ class Grid extends React.Component {
         this.handleSearch = this.handleSearch.bind(this);
         this.handleSquareResize = this.handleSquareResize.bind(this);
         this.handleIntervalChange = this.handleIntervalChange.bind(this);
+        this.changeContextSquareType = this.changeContextSquareType.bind(this);
+        this.setStartSquare = this.setStartSquare.bind(this);
+        this.setEndSquare = this.setEndSquare.bind(this);
     }
 
     componentDidMount() {
@@ -66,6 +70,12 @@ class Grid extends React.Component {
     handleMouseUp() {
         this.setState({
             mousedown: 0,
+        });
+    }
+
+    changeContextSquareType(squareType) {
+        this.setState({
+            squareType: squareType,
         });
     }
 
@@ -314,6 +324,10 @@ class Grid extends React.Component {
         var context_value = {
             mousedown: this.state.mousedown,
             color: this.state.color,
+            squareType: this.state.squareType,
+            changeContextSquareType: this.changeContextSquareType,
+            setStartSquare: this.setStartSquare,
+            setEndSquare: this.setEndSquare,
         }
 
         return (
