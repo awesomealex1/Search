@@ -7,4 +7,6 @@ export const MouseDownContext = React.createContext({
     changeContextSquareType: () => {},
     setStartSquare: () => {},
     setEndSquare: () => {},
+    addSquareToGrid: () => {},
+    removeSquareFromGrid: () => {},
 });

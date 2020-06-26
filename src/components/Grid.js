@@ -38,7 +38,7 @@ class Grid extends React.Component {
         document.addEventListener('mousedown', this.handleMouseDown);
         document.addEventListener('mouseup', this.handleMouseUp);
         this.handleWindowResize();
-        setTimeout(function() {this.prepareGrid(true)}.bind(this),500);
+        setTimeout(function() {this.prepareGrid(true)}.bind(this),200);
     }
 
     handleWindowResize = () => {
@@ -313,11 +313,11 @@ class Grid extends React.Component {
         var column;
 
         for (var i = 0; i < nExtraWidth; i++) {
-            column = <Column key={i} x={i} nNormalSquares={nNormalHeight} nHigherSquares={nExtraHeight} extraHeightValue={extraHeightValue} squareSize={this.state.squareSize} width={this.state.squareSize+extraWidthValue+1} addSquareToGrid={this.addSquareToGrid} removeSquareFromGrid={this.removeSquareFromGrid}/>;
+            column = <Column key={i} x={i} nNormalSquares={nNormalHeight} nHigherSquares={nExtraHeight} extraHeightValue={extraHeightValue} squareSize={this.state.squareSize} width={this.state.squareSize+extraWidthValue+1}/>;
             columns.push(column);
         }
         for (i = 0; i < nNormalWidth; i++) {
-            column = <Column key={i+nExtraWidth} x={i+nExtraWidth} nNormalSquares={nNormalHeight} nHigherSquares={nExtraHeight} extraHeightValue={extraHeightValue} squareSize={this.state.squareSize} width={this.state.squareSize+extraWidthValue} addSquareToGrid={this.addSquareToGrid} removeSquareFromGrid={this.removeSquareFromGrid}/>;
+            column = <Column key={i+nExtraWidth} x={i+nExtraWidth} nNormalSquares={nNormalHeight} nHigherSquares={nExtraHeight} extraHeightValue={extraHeightValue} squareSize={this.state.squareSize} width={this.state.squareSize+extraWidthValue}/>;
             columns.push(column);
         }
 
@@ -328,6 +328,8 @@ class Grid extends React.Component {
             changeContextSquareType: this.changeContextSquareType,
             setStartSquare: this.setStartSquare,
             setEndSquare: this.setEndSquare,
+            addSquareToGrid: this.addSquareToGrid,
+            removeSquareFromGrid: this.removeSquareFromGrid,
         }
 
         return (

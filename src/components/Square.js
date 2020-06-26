@@ -19,7 +19,7 @@ class Square extends React.Component {
     }
 
     componentWillUnmount() {
-        this.props.removeSquareFromGrid(this.props.x, this.props.y, this);
+        this.context.removeSquareFromGrid(this.props.x, this.props.y);
     }
 
     handleOnMouseLeave() {
@@ -29,12 +29,9 @@ class Square extends React.Component {
     }
 
     handleOnMouseEnter() {
-        console.log("1");
         if (this.context.mousedown === 1) {
-            console.log(this.context.squareType);
             if (this.context.squareType === 1 && this.state.squareType === 0) {
                 this.colorSquare(this.context.color,this.context.squareType);
-                
             } else if (this.context.squareType === 2) {
                 this.setAsStartOrEnd(0);
                 this.context.setStartSquare(this.props.x,this.props.y);
@@ -46,11 +43,10 @@ class Square extends React.Component {
     }
 
     handleOnMouseDown() {
-        console.log(this.context.squareType);
         if (this.state.squareType === 2 || this.state.squareType === 3) {
             this.context.changeContextSquareType(this.state.squareType);
         } else {
-            this.colorSquare();
+            this.colorSquare(this.context.color, this.context.squareType);
         }
     }
 
@@ -133,7 +129,7 @@ class Square extends React.Component {
     }
 
     render() {
-        this.props.addSquareToGrid(this.props.x, this.props.y, this);
+        this.context.addSquareToGrid(this.props.x, this.props.y, this);
         var width = this.props.width;
         var height = this.props.height;
 
