@@ -18,8 +18,9 @@ class Grid extends React.Component {
             interval: 1,
             squareType: 1,
         }
-        this.test = 0
+
         this.grid = new Map();
+
         this.handleMouseDown = this.handleMouseDown.bind(this);
         this.handleMouseUp = this.handleMouseUp.bind(this);
         this.addSquareToGrid = this.addSquareToGrid.bind(this);
@@ -44,7 +45,7 @@ class Grid extends React.Component {
     handleWindowResize = () => {
         this.setState({ 
             width: window.innerWidth - 4,
-            height: window.innerHeight - 4 - 34,    //4 : square borders, 35 : taskbar height
+            height: window.innerHeight - 4 - 34,    //4 : square borders, 34 : taskbar height
          });
     }
 
@@ -159,6 +160,9 @@ class Grid extends React.Component {
     }
 
     BFSLoop(queue) {
+        if (queue.length < 1) {
+            return 0;
+        }
         var square = queue.shift();
         if(square.props.x === this.xEnd && square.props.y === this.yEnd) {
             return 0;
@@ -242,6 +246,9 @@ class Grid extends React.Component {
             this.highlightedSquares[0].unhighlight();
             this.highlightedSquares = [];
             var top = stack.pop();
+            if (stack.length < 1) {
+                return 0;
+            }
             var tmp = stack.pop();
             this.highlightedSquares.push(tmp);
             this.highlightedSquares[0].highlight();
@@ -280,16 +287,16 @@ class Grid extends React.Component {
         var x = square.props.x;
         var y = square.props.y;
         var adj = [];
-        if (this.getSquare(x+1,y) !== undefined && this.getSquare(x+1,y).state.visited === 0) {
+        if (this.getSquare(x+1,y) !== undefined && this.getSquare(x+1,y).state.visited === 0 && this.getSquare(x+1,y).state.squareType !== 1) {
             adj.push(this.getSquare(x+1,y));
         }
-        if (this.getSquare(x-1,y) !== undefined && this.getSquare(x-1,y).state.visited === 0) {
+        if (this.getSquare(x-1,y) !== undefined && this.getSquare(x-1,y).state.visited === 0 && this.getSquare(x-1,y).state.squareType !== 1) {
             adj.push(this.getSquare(x-1,y));
         }
-        if (this.getSquare(x,y+1) !== undefined && this.getSquare(x,y+1).state.visited === 0) {
+        if (this.getSquare(x,y+1) !== undefined && this.getSquare(x,y+1).state.visited === 0 && this.getSquare(x,y+1).state.squareType !== 1) {
             adj.push(this.getSquare(x,y+1));
         }
-        if (this.getSquare(x,y-1) !== undefined && this.getSquare(x,y-1).state.visited === 0) {
+        if (this.getSquare(x,y-1) !== undefined && this.getSquare(x,y-1).state.visited === 0 && this.getSquare(x,y-1).state.squareType !== 1) {
             adj.push(this.getSquare(x,y-1));
         }
         return adj;
