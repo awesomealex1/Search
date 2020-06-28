@@ -46,13 +46,21 @@ class Square extends React.Component {
         if (this.state.squareType === 2 || this.state.squareType === 3) {
             this.context.changeContextSquareType(this.state.squareType);
         } else {
-            this.colorSquare(this.context.color, this.context.squareType);
+            if (this.context.squareType == 2) {
+                this.setAsStartOrEnd(0);
+                this.context.setStartSquare(this.props.x,this.props.y);
+            } else if (this.context.squareType == 3) {
+                this.setAsStartOrEnd(1);
+                this.context.setEndSquare(this.props.x,this.props.y);
+            } else {
+                this.colorSquare(this.context.color, this.context.squareType);
+            }
         }
     }
 
     handleOnMouseUp() {
         if (this.context.squareType === 2 || this.context.squareType === 3) {
-            this.context.changeContextSquareType(1);
+            this.context.changeContextSquareType(this.context.dropdownSquareType);
         }
     }
 

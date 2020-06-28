@@ -17,6 +17,7 @@ class Grid extends React.Component {
             squareSize: 50,
             interval: 1,
             squareType: 1,
+            dropdownSquareType: 1,
         }
 
         this.grid = new Map();
@@ -80,6 +81,9 @@ class Grid extends React.Component {
     //Used by Toolbar grid square dropdown
     handleSquareTypeChange(squareType) {
         this.changeContextSquareType(squareType);
+        this.setState({
+            dropdownSquareType: squareType,
+        });
     }
 
     changeContextSquareType(squareType) {
@@ -104,6 +108,10 @@ class Grid extends React.Component {
     }
 
     setStartSquare(x,y) {
+        console.log(this.xStart);
+        if (this.xStart !== undefined && this.yStart !== undefined && this.getSquare(this.xStart,this.yStart)) {
+            this.getSquare(this.xStart,this.yStart).unsetAsStartOrEnd();
+        }
         this.colorSquare(x,y,colors.start,2);
         this.start = this.getSquare(x,y);
         this.xStart = x;
@@ -111,6 +119,9 @@ class Grid extends React.Component {
     }
 
     setEndSquare(x,y) {
+        if (this.xEnd !== undefined && this.yEnd !== undefined && this.getSquare(this.xEnd,this.yEnd)) {
+            this.getSquare(this.xEnd,this.yEnd).unsetAsStartOrEnd();
+        }
         this.colorSquare(x,y,colors.end,3);
         this.end = this.getSquare(x,y);
         this.xEnd = x;
@@ -305,6 +316,7 @@ class Grid extends React.Component {
             mousedown: this.state.mousedown,
             color: this.state.color,
             squareType: this.state.squareType,
+            dropdownSquareType: this.state.dropdownSquareType,
             changeContextSquareType: this.changeContextSquareType,
             setStartSquare: this.setStartSquare,
             setEndSquare: this.setEndSquare,
