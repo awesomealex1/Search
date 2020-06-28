@@ -50,32 +50,36 @@ class Grid extends React.Component {
          });
     }
 
+    //Changes state and context mousedown
+    handleMouseDown() {
+        this.setState({
+            mousedown: 1,
+        });
+    }
+    
+    //Changes state and context mousedown
+    handleMouseUp() {
+        this.setState({
+            mousedown: 0,
+        });
+    }
+
     handleSquareResize(size) {
         this.setState({
             squareSize: size,
         });
     }
 
+    //Used by Toolbar speed slider
     handleIntervalChange(interval) {
         this.setState({
             interval: interval,
         });
     }
 
+    //Used by Toolbar grid square dropdown
     handleSquareTypeChange(squareType) {
         this.changeContextSquareType(squareType);
-    }
-
-    handleMouseDown() {
-        this.setState({
-            mousedown: 1,
-        });
-    }
-
-    handleMouseUp() {
-        this.setState({
-            mousedown: 0,
-        });
     }
 
     changeContextSquareType(squareType) {
@@ -84,10 +88,12 @@ class Grid extends React.Component {
         });
     }
 
+    //Used by Square if it gets deleted
     removeSquareFromGrid(x,y) {
         this.grid.delete(x.toString() + "-" + y.toString());
     }
 
+    //Used by Square when it gets created
     addSquareToGrid(x,y,val) {
         this.grid.set(x.toString() + "-" + y.toString(),val);
     }
@@ -115,6 +121,7 @@ class Grid extends React.Component {
         return this.grid.get(x.toString() + "-" + y.toString());
     }
 
+    //Resets values so algorithms will work
     prepareGrid(firstRun) {
         var values = this.grid.values();
         for (var square of values) {
@@ -131,8 +138,9 @@ class Grid extends React.Component {
         }
     }
 
+    //Used by Toolbar Start button
     handleSearch(algorithm) {
-        this.prepareGrid(false);
+        this.prepareGrid(false);    //false = not first run
         setTimeout(function(algorithm) {this.startSearch(algorithm)}.bind(this),this.state.interval,algorithm);
     }
 
@@ -171,7 +179,7 @@ class Grid extends React.Component {
         if(square.props.x === this.xEnd && square.props.y === this.yEnd) {
             return 0;
         }
-        var adj = this.AdjacentSquares(square);
+        var adj = this.FreeAdjacentSquares(square);
         for (var i = 0; i < this.highlightedSquares.length; i++) {
             this.highlightedSquares[i].unhighlight();
         }
@@ -203,7 +211,7 @@ class Grid extends React.Component {
     }
 
     DFSLoop(x,y,square,stack) {
-        var adj = this.AdjacentSquares(square)
+        var adj = this.FreeAdjacentSquares(square)
         if (adj.length > 0) {
             square = adj[0];
         } else {
@@ -247,7 +255,8 @@ class Grid extends React.Component {
         }
     }
 
-    AdjacentSquares(square) {
+    //Returns all neighbouring squares that are unvisited and not wall
+    FreeAdjacentSquares(square) {
         var x = square.props.x;
         var y = square.props.y;
         var adj = [];
