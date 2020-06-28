@@ -25,7 +25,7 @@ class Square extends React.Component {
     handleOnMouseLeave() {
         if (this.context.mousedown === 1 && (this.context.squareType === 2 || this.context.squareType === 3)) {
             this.unsetAsStartOrEnd();
-        } 
+        }
     }
 
     handleOnMouseEnter() {

@@ -10,9 +10,9 @@ class Grid extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            width: 0,
-            height: 0,
-            mousedown: 0,
+            width: 0,   //Width of grid
+            height: 0,  //Height of grid
+            mousedown: 0,   //0 = L Mouse Button not down, 1 = L Mouse Button is down
             color: colors.wall,
             squareSize: 50,
             interval: 1,
@@ -32,6 +32,7 @@ class Grid extends React.Component {
         this.changeContextSquareType = this.changeContextSquareType.bind(this);
         this.setStartSquare = this.setStartSquare.bind(this);
         this.setEndSquare = this.setEndSquare.bind(this);
+        this.handleSquareTypeChange = this.handleSquareTypeChange.bind(this);
     }
 
     componentDidMount() {
@@ -61,11 +62,14 @@ class Grid extends React.Component {
         });
     }
 
+    handleSquareTypeChange(squareType) {
+        this.changeContextSquareType(squareType);
+    }
+
     handleMouseDown() {
         this.setState({
             mousedown: 1,
         });
-        
     }
 
     handleMouseUp() {
@@ -185,46 +189,6 @@ class Grid extends React.Component {
         setTimeout(function(queue) {this.BFSLoop(queue)}.bind(this),this.state.interval,queue);
     }
 
-/*  Implementation of DFS using recursion (hard to add settimeout to it)
-    DFSRecursive(x,y,xEnd,yEnd) {
-
-        if (x === xEnd && y === yEnd) {
-            this.getSquare(x,y).colorSquare(colors.end);
-            return 1
-        }
-
-        var square = this.getSquare(x,y);;
-
-        if (square.props.x !== 10 || square.props.y !== 10) {
-            square.colorSquare(colors.visited);
-        }
-
-        square.setAsVisited();
-        
-        for (var i = 0; i < 4; i++) {
-        
-            var nextSquare;
-
-            if (this.getSquare(x+1,y) !== undefined && this.getSquare(x+1,y).state.visited === 0) {
-                nextSquare = this.getSquare(x+1,y);
-            } else if (this.getSquare(x-1,y) !== undefined && this.getSquare(x-1,y).state.visited === 0) {
-                nextSquare = this.getSquare(x-1,y);
-            } else if (this.getSquare(x,y+1) !== undefined && this.getSquare(x,y+1).state.visited === 0) {
-                nextSquare = this.getSquare(x,y+1);
-            } else if (this.getSquare(x,y-1) !== undefined && this.getSquare(x,y-1).state.visited === 0) {
-                nextSquare = this.getSquare(x,y-1);
-            }else {
-                return 0;
-            }
-
-            if (this.DFS(nextSquare.props.x,nextSquare.props.y,xEnd,yEnd) === 1) {
-                return 1
-            } else {
-                nextSquare.colorSquare(colors.empty);
-            }
-        }
-    }
-*/
     DFS(x,y) {
         var stack = [];
         stack.push(this.getSquare(x,y));
@@ -341,7 +305,7 @@ class Grid extends React.Component {
 
         return (
             <div>
-            <Toolbar handleSearch={this.handleSearch} handleSquareResize={this.handleSquareResize} handleIntervalChange={this.handleIntervalChange}></Toolbar>
+            <Toolbar handleSearch={this.handleSearch} handleSquareResize={this.handleSquareResize} handleIntervalChange={this.handleIntervalChange} handleSquareTypeChange={this.handleSquareTypeChange}></Toolbar>
             <MouseDownContext.Provider value={context_value}>
             <div className="grid">
                 {columns}

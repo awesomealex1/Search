@@ -11,6 +11,7 @@ class Toolbar extends React.Component {
         this.handleAlgorithmChange = this.handleAlgorithmChange.bind(this);
         this.handleSquareSizeChange = this.handleSquareSizeChange.bind(this);
         this.handleIntervalChange = this.handleIntervalChange.bind(this);
+        this.handleSquareTypeChange = this.handleSquareTypeChange.bind(this);
         this.maxInterval = 1000;
         this.minInterval = 1;
     }
@@ -29,6 +30,10 @@ class Toolbar extends React.Component {
         this.props.handleIntervalChange(this.maxInterval - parseInt(event.target.value) + this.minInterval);
     }
 
+    handleSquareTypeChange(event) {
+        this.props.handleSquareTypeChange(parseInt(event.target.value));
+    }
+
     render() {
         return (
             <div>
@@ -41,6 +46,14 @@ class Toolbar extends React.Component {
                 <input type="range" min="20" max="200" defaultValue="50" onChange={this.handleSquareSizeChange}></input>
                 <label>Speed:</label>
                 <input type="range" min={this.minInterval.toString()} max={this.maxInterval.toString()} defaultValue={this.maxInterval.toString()} onChange={this.handleIntervalChange}></input>
+                <label>Add Squares:</label>
+                <select onChange={this.handleSquareTypeChange}>
+                    <option value="1">Wall</option>
+                    <option value="2">Start</option>
+                    <option value="3">End</option>
+                </select>
+                <label>Eraser:</label>
+                <input type="checkbox"></input>
             </div>
         );
     }
