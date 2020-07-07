@@ -5,6 +5,7 @@ export const MouseDownContext = React.createContext({
     color: "black",
     squareType: 1,
     dropdownSquareType: 1,
+    eraserActive: 0,
     changeContextSquareType: () => {},
     setStartSquare: () => {},
     setEndSquare: () => {},

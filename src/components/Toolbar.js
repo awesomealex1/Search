@@ -12,6 +12,7 @@ class Toolbar extends React.Component {
         this.handleSquareSizeChange = this.handleSquareSizeChange.bind(this);
         this.handleIntervalChange = this.handleIntervalChange.bind(this);
         this.handleSquareTypeChange = this.handleSquareTypeChange.bind(this);
+        this.handleEraserChange = this.handleEraserChange.bind(this);
         this.maxInterval = 1000;
         this.minInterval = 1;
     }
@@ -34,6 +35,11 @@ class Toolbar extends React.Component {
         this.props.handleSquareTypeChange(parseInt(event.target.value));
     }
 
+    handleEraserChange(event) {
+        this.props.handleEraserChange(parseInt(event.target.checked === true ? 1 : 0));
+        console.log(event.target.checked);
+    }
+
     render() {
         return (
             <div>
@@ -53,7 +59,7 @@ class Toolbar extends React.Component {
                     <option value="3">End</option>
                 </select>
                 <label>Eraser:</label>
-                <input type="checkbox"></input>
+                <input type="checkbox" onChange={this.handleEraserChange}></input>
             </div>
         );
     }

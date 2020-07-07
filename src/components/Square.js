@@ -30,7 +30,9 @@ class Square extends React.Component {
 
     handleOnMouseEnter() {
         if (this.context.mousedown === 1) {
-            if (this.context.squareType === 1 && this.state.squareType === 0) {
+            if (this.context.eraserActive === 1) {
+                this.colorSquare(colors.empty,0);
+            } else if (this.context.squareType === 1 && this.state.squareType === 0) {
                 this.colorSquare(this.context.color,this.context.squareType);
             } else if (this.context.squareType === 2) {
                 this.setAsStartOrEnd(0);
@@ -43,7 +45,9 @@ class Square extends React.Component {
     }
 
     handleOnMouseDown() {
-        if (this.state.squareType === 2 || this.state.squareType === 3) {
+        if(this.context.eraserActive === 1) {
+            this.colorSquare(colors.empty,0);
+        } else if (this.state.squareType === 2 || this.state.squareType === 3) {
             this.context.changeContextSquareType(this.state.squareType);
         } else {
             if (this.context.squareType == 2) {

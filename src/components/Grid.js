@@ -18,6 +18,7 @@ class Grid extends React.Component {
             interval: 1,
             squareType: 1,
             dropdownSquareType: 1,
+            eraserActive: 0,
         }
 
         this.grid = new Map();
@@ -34,6 +35,7 @@ class Grid extends React.Component {
         this.setStartSquare = this.setStartSquare.bind(this);
         this.setEndSquare = this.setEndSquare.bind(this);
         this.handleSquareTypeChange = this.handleSquareTypeChange.bind(this);
+        this.handleEraserActiveChange = this.handleEraserActiveChange.bind(this);
     }
 
     componentDidMount() {
@@ -89,6 +91,13 @@ class Grid extends React.Component {
     changeContextSquareType(squareType) {
         this.setState({
             squareType: squareType,
+        });
+    }
+
+    handleEraserActiveChange(shouldBeActive) {
+        console.log(shouldBeActive);
+        this.setState({
+            eraserActive: shouldBeActive,
         });
     }
 
@@ -317,6 +326,7 @@ class Grid extends React.Component {
             color: this.state.color,
             squareType: this.state.squareType,
             dropdownSquareType: this.state.dropdownSquareType,
+            eraserActive: this.state.eraserActive,
             changeContextSquareType: this.changeContextSquareType,
             setStartSquare: this.setStartSquare,
             setEndSquare: this.setEndSquare,
@@ -326,7 +336,7 @@ class Grid extends React.Component {
 
         return (
             <div>
-            <Toolbar handleSearch={this.handleSearch} handleSquareResize={this.handleSquareResize} handleIntervalChange={this.handleIntervalChange} handleSquareTypeChange={this.handleSquareTypeChange}></Toolbar>
+            <Toolbar handleSearch={this.handleSearch} handleSquareResize={this.handleSquareResize} handleIntervalChange={this.handleIntervalChange} handleSquareTypeChange={this.handleSquareTypeChange} handleEraserChange={this.handleEraserActiveChange}></Toolbar>
             <MouseDownContext.Provider value={context_value}>
             <div className="grid">
                 {columns}
