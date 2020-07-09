@@ -167,13 +167,25 @@ class Grid extends React.Component {
     startSearch(algorithm) {
         var xStart = this.start.props.x;
         var yStart = this.start.props.y;
-        console.log("search started");
-        if (algorithm === "BFS") {
-            this.BFS(xStart,yStart);
-        } else if (algorithm === "DFS") {
-            this.DFS(xStart,yStart);
+        var start = this.getSquare(xStart,yStart);
+        var xEnd = this.end.props.x;
+        var yEnd = this.end.props.y;
+        var end = this.getSquare(xEnd,yEnd);
+        if(start === undefined && end === undefined) {
+            alert("Please add an end and a start node");
+        } else if (start === undefined) {
+            alert("Please add a start node");
+        } else if (end === undefined) {
+            alert("Please add an end node");
         } else {
-            console.log("No algorithm selected");
+            console.log("search started");
+            if (algorithm === "BFS") {
+                this.BFS(xStart,yStart);
+            } else if (algorithm === "DFS") {
+                this.DFS(xStart,yStart);
+            } else {
+                console.log("No algorithm selected");
+            }
         }
     }
 
