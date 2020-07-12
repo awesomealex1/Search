@@ -4,6 +4,7 @@ import Column from './Column.js'
 import Toolbar from './Toolbar.js'
 import {MouseDownContext} from './context.js'
 import {colors} from './../colors.js'
+import Square from './Square';
 
 class Grid extends React.Component {
     
@@ -183,6 +184,8 @@ class Grid extends React.Component {
                 this.BFS(xStart,yStart);
             } else if (algorithm === "DFS") {
                 this.DFS(xStart,yStart);
+            } else if (algorithm === "ASTAR") {
+                this.AStar(xStart,yStart,xEnd,yEnd);
             } else {
                 console.log("No algorithm selected");
             }
@@ -285,6 +288,103 @@ class Grid extends React.Component {
             this.highlightedSquares[0].highlight();
             setTimeout(function(x,y,square,stack) {this.DFSLoop(x,y,square,stack)}.bind(this),this.state.interval,x,y,square,stack);
         }
+    }
+
+    AStar(xStart,yStart,xEnd,yEnd) {
+        var xStart = this.start.props.x;
+        var yStart = this.start.props.y;
+        var xEnd = this.end.props.x;
+        var yEnd = this.end.props.y;
+        var open = [];
+        var closed = [];
+        var g = new Map();
+        var h = new Map();
+        open.push(this.getSquare(xStart,yStart));
+        this.highlightedSquares.push(this.getSquare(xStart,yStart));
+        this.getSquare(xStart,yStart).setAsVisited();
+        this.getSquare(xStart,yStart).colorSquare(colors.visited);
+        this.highlightedSquares[0].highlight();
+        g.set(xStart.toString() + " " + yStart.toString(),0);
+        console.log(xStart.toString() + " " + yStart.toString());
+        console.log(g.keys().next().value);
+        console.log(g.values().next().value);
+        console.log(g.get(xStart.toString() + " " + yStart.toString()), "   ",g[g.keys().next().value]);
+        setTimeout(function(open,closed,g,h) {this.AStarLoop(open,closed,g,h)}.bind(this),this.state.interval,open,closed,g,h);
+    }
+
+    AStarLoop(open,closed,g,h) {
+        console.log(open)
+        for (var i = 0; i < this.highlightedSquares.length; i++) {
+            this.highlightedSquares[i].unhighlight();
+        }
+        this.highlightedSquares = [];
+        var leastDistance = 1000000;
+        var squareWithLeastDistanceIndex;
+        for (var i = 0; i < open.length; i++) {
+            var square = open[i];
+            if (this.DistanceFromEnd(square.props.x,square.props.y) + g.get(square.props.x.toString() + " " + square.props.y.toString()) < leastDistance) {
+                console.log("B");
+                squareWithLeastDistanceIndex = i;
+                leastDistance = this.DistanceFromEnd(square.props.x,square.props.y) + g.get(square.props.x.toString() + " " + square.props.y.toString());
+            }
+            console.log("g: ", g[square.props.x.toString() + " " + square.props.y.toString()]);
+            console.log(square.props.x.toString() + " " + square.props.y.toString());
+            console.log(g["8 7"]);
+
+            this.highlightedSquares.push(square);
+            square.highlight();
+        }
+        console.log(squareWithLeastDistanceIndex)
+        for (var i = 0; i < this.highlightedSquares.length; i++) {
+            this.highlightedSquares[i].unhighlight();
+        }
+        this.highlightedSquares = [];
+        var currentSquare = open[squareWithLeastDistanceIndex];
+        this.highlightedSquares.push(currentSquare);
+        currentSquare.highlight();
+        open.splice(squareWithLeastDistanceIndex,1);
+        var adjacentSquares = this.FreeAdjacentSquares(currentSquare);
+        for (var i = 0; i < adjacentSquares.length; i++) {
+            this.highlightedSquares.push(adjacentSquares[i]);
+            adjacentSquares[i].highlight();
+            if (adjacentSquares[i] === this.end) {
+                return 0;
+            }
+            if (!g[adjacentSquares[i].props.x.toString() + " " + adjacentSquares[i].props.y.toString()]) {
+                g.set(adjacentSquares[i].props.x.toString() + " " + adjacentSquares[i].props.y.toString(),g[currentSquare.props.x.toString() + " " + currentSquare.props.y.toString()] + 1);
+            } else if (g[adjacentSquares[i].props.x.toString() + " " + adjacentSquares[i].props.y.toString()] > g[currentSquare.props.x.toString() + " " + currentSquare.props.y.toString()] + 1) {
+                g[adjacentSquares[i].props.x.toString() + " " + adjacentSquares[i].props.y.toString()] = g[currentSquare.props.x.toString() + " " + currentSquare.props.y.toString()] + 1; //Add 1 because distance will always be 1 (no weights)
+            }
+            var f = g[adjacentSquares[i].props.x.toString() + " " + adjacentSquares[i].props.y.toString()] + this.DistanceFromEnd(adjacentSquares[i].props.x,adjacentSquares[i].props.y);
+            if (!this.IsInArr(adjacentSquares[i],open) && !this.IsInArr(adjacentSquares[i],closed)) {
+                open.push(adjacentSquares[i]);
+            }
+        }
+        closed.push(currentSquare);
+        currentSquare.setAsVisited();
+        currentSquare.colorSquare(colors.visited);
+        if (open.length > 0) {
+            setTimeout(function(open,closed,g,h) {this.AStarLoop(open,closed,g,h)}.bind(this),this.state.interval,open,closed,g,h);
+        }
+    }
+
+    IsInArr(thing,arr) {
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] === thing) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //Returns Manhattan Distance from Starting Square
+    DistanceFromStart(x,y) {
+        return Math.abs(x-this.start.props.x) + Math.abs(y-this.start.props.y);
+    }
+    
+    //Returns Manhattan Distance from End Square
+    DistanceFromEnd(x,y) {
+        return Math.abs(x-this.end.props.x) + Math.abs(y-this.end.props.y);
     }
 
     //Returns all neighbouring squares that are unvisited and not wall

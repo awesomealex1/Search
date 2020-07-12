@@ -47,6 +47,7 @@ class Toolbar extends React.Component {
                 <select defaultValue={this.state.algorithm} onChange={this.handleAlgorithmChange}>
                     <option value="DFS">DFS</option>
                     <option value="BFS">BFS</option>
+                    <option value="ASTAR">A*</option>
                 </select>
                 <label>Square Size:</label>
                 <input type="range" min="20" max="200" defaultValue="50" onChange={this.handleSquareSizeChange}></input>
