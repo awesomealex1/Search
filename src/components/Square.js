@@ -90,6 +90,7 @@ class Square extends React.Component {
             color: color,
             squareType: squareType,
         });
+        this.unhighlightedColor = color;
     }
 
     setAsVisited() {
