@@ -272,8 +272,7 @@ class Grid extends React.Component {
 
         stack.push(square);
         square.setAsVisited();
-
-        if ((square.props.x !== this.xStart || square.props.y !== this.yStart) && (square.props.x !== this.xEnd || square.props.y !== this.yEnd)) {
+        if (square !== this.end && square !== this.start) {
             square.colorSquare(colors.visited);
         }
 
@@ -300,7 +299,6 @@ class Grid extends React.Component {
 
         this.highlightedSquares.push(this.start);
         this.start.setAsVisited();
-        this.start.colorSquare(colors.visited);
         this.highlightedSquares[0].highlight();
 
         g.set(this.SquareId(this.start),0);
@@ -339,20 +337,29 @@ class Grid extends React.Component {
         
         var currentSquare = open[squareWithLeastDistanceIndex];
 
+        currentSquare.setAsVisited();
+        if (currentSquare !== this.start && currentSquare !== this.end) {
+            currentSquare.colorSquare(colors.visited);
+        }
+
         this.highlightedSquares.push(currentSquare);
         currentSquare.highlight();
         
         open.splice(squareWithLeastDistanceIndex,1);
 
-        var adjacentSquares = this.FreeAdjacentSquares(currentSquare);
+        var adjacentSquares = this.FreeAdjacentSquares(currentSquare,true); //true: include free diagonal squares
 
         for (var i = 0; i < adjacentSquares.length; i++) {
-            this.highlightedSquares.push(adjacentSquares[i]);
-            adjacentSquares[i].highlight();
-
             if (adjacentSquares[i] === this.end) {
+                for (var i = 0; i < this.highlightedSquares.length; i++) {
+                    this.highlightedSquares[i].unhighlight();
+                }
+                this.highlightedSquares = [];
                 return 0;
             }
+
+            this.highlightedSquares.push(adjacentSquares[i]);
+            adjacentSquares[i].highlight();
 
             var adjacentSquareId = this.SquareId(adjacentSquares[i]);
             var currentSquareId = this.SquareId(currentSquare);
@@ -366,9 +373,8 @@ class Grid extends React.Component {
         }
 
         closed.push(currentSquare); //Put current square in closed
-
-        currentSquare.setAsVisited();
-        currentSquare.colorSquare(colors.visited);
+        
+        
 
         if (open.length > 0) {
             setTimeout(function(open,closed,g,h) {this.AStarLoop(open,closed,g,h)}.bind(this),this.state.interval,open,closed,g,h);
@@ -416,7 +422,7 @@ class Grid extends React.Component {
         if (this.getSquare(x,y-1) !== undefined && this.getSquare(x,y-1).state.visited === 0 && this.getSquare(x,y-1).state.squareType !== 1) {
             adj.push(this.getSquare(x,y-1));
         }
-        
+
         if (diagonal) {
             if (this.getSquare(x+1,y+1) !== undefined && this.getSquare(x+1,y+1).state.visited === 0 && this.getSquare(x+1,y+1).state.squareType !== 1) {
                 adj.push(this.getSquare(x+1,y+1));
