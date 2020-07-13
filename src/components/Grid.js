@@ -291,20 +291,20 @@ class Grid extends React.Component {
     }
 
     AStar(xStart,yStart,xEnd,yEnd) {
-        var xStart = this.start.props.x;
-        var yStart = this.start.props.y;
-        var xEnd = this.end.props.x;
-        var yEnd = this.end.props.y;
         var open = [];
         var closed = [];
         var g = new Map();
         var h = new Map();
+
         open.push(this.start);
+
         this.highlightedSquares.push(this.start);
         this.start.setAsVisited();
         this.start.colorSquare(colors.visited);
         this.highlightedSquares[0].highlight();
+
         g.set(this.SquareId(this.start),0);
+        
         setTimeout(function(open,closed,g,h) {this.AStarLoop(open,closed,g,h)}.bind(this),this.state.interval,open,closed,g,h);
     }
 
@@ -312,11 +312,14 @@ class Grid extends React.Component {
         for (var i = 0; i < this.highlightedSquares.length; i++) {
             this.highlightedSquares[i].unhighlight();
         }
+
         this.highlightedSquares = [];
         var leastDistance = 1000000;
         var squareWithLeastDistanceIndex;
+        
         for (var i = 0; i < open.length; i++) {
             var square = open[i];
+
             if (this.DistanceFromEnd(square.props.x,square.props.y) + g.get(this.SquareId(square)) < leastDistance) {
                 squareWithLeastDistanceIndex = i;
                 leastDistance = this.DistanceFromEnd(square.props.x,square.props.y) + g.get(this.SquareId(square));
@@ -325,36 +328,45 @@ class Grid extends React.Component {
             this.highlightedSquares.push(square);
             square.highlight();
         }
+
         for (var i = 0; i < this.highlightedSquares.length; i++) {
             this.highlightedSquares[i].unhighlight();
         }
         this.highlightedSquares = [];
+        
         var currentSquare = open[squareWithLeastDistanceIndex];
+
         this.highlightedSquares.push(currentSquare);
         currentSquare.highlight();
+        
         open.splice(squareWithLeastDistanceIndex,1);
+
         var adjacentSquares = this.FreeAdjacentSquares(currentSquare);
+
         for (var i = 0; i < adjacentSquares.length; i++) {
             this.highlightedSquares.push(adjacentSquares[i]);
             adjacentSquares[i].highlight();
+
             if (adjacentSquares[i] === this.end) {
                 return 0;
             }
+
             var adjacentSquareId = this.SquareId(adjacentSquares[i]);
             var currentSquareId = this.SquareId(currentSquare);
-            if (!g.get(adjacentSquareId)) {
-                g.set(adjacentSquareId,g.get(currentSquareId) + 1);
-            } else if (g.get(adjacentSquareId) > g.get(currentSquareId) + 1) {
-                g.set(adjacentSquareId,g.get(currentSquareId) + 1); //Add 1 because distance will always be 1 (no weights)
-            }
-            //var f = g.get(adjacentSquareId) + this.DistanceFromEnd(adjacentSquares[i].props.x,adjacentSquares[i].props.y);
+
+            g.set(adjacentSquareId,g.get(currentSquareId) + 1);
+
+            //If adjacent square isn't in open already and also isn't in closed
             if (!this.IsInArr(adjacentSquares[i],open) && !this.IsInArr(adjacentSquares[i],closed)) {
                 open.push(adjacentSquares[i]);
             }
         }
-        closed.push(currentSquare);
+
+        closed.push(currentSquare); //Put current square in closed
+
         currentSquare.setAsVisited();
         currentSquare.colorSquare(colors.visited);
+
         if (open.length > 0) {
             setTimeout(function(open,closed,g,h) {this.AStarLoop(open,closed,g,h)}.bind(this),this.state.interval,open,closed,g,h);
         }
