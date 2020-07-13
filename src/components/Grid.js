@@ -304,7 +304,7 @@ class Grid extends React.Component {
         this.highlightedSquares[0].highlight();
 
         g.set(this.SquareId(this.start),0);
-        
+
         setTimeout(function(open,closed,g,h) {this.AStarLoop(open,closed,g,h)}.bind(this),this.state.interval,open,closed,g,h);
     }
 
@@ -320,9 +320,12 @@ class Grid extends React.Component {
         for (var i = 0; i < open.length; i++) {
             var square = open[i];
 
-            if (this.DistanceFromEnd(square.props.x,square.props.y) + g.get(this.SquareId(square)) < leastDistance) {
+            var gSquare = g.get(this.SquareId(square));
+            var hSquare = this.DistanceFromEnd(square.props.x,square.props.y);
+
+            if (gSquare + hSquare < leastDistance) {
                 squareWithLeastDistanceIndex = i;
-                leastDistance = this.DistanceFromEnd(square.props.x,square.props.y) + g.get(this.SquareId(square));
+                leastDistance = gSquare + hSquare;
             }
 
             this.highlightedSquares.push(square);
@@ -397,7 +400,7 @@ class Grid extends React.Component {
     }
 
     //Returns all neighbouring squares that are unvisited and not wall
-    FreeAdjacentSquares(square) {
+    FreeAdjacentSquares(square,diagonal=false) {
         var x = square.props.x;
         var y = square.props.y;
         var adj = [];
@@ -413,6 +416,22 @@ class Grid extends React.Component {
         if (this.getSquare(x,y-1) !== undefined && this.getSquare(x,y-1).state.visited === 0 && this.getSquare(x,y-1).state.squareType !== 1) {
             adj.push(this.getSquare(x,y-1));
         }
+        
+        if (diagonal) {
+            if (this.getSquare(x+1,y+1) !== undefined && this.getSquare(x+1,y+1).state.visited === 0 && this.getSquare(x+1,y+1).state.squareType !== 1) {
+                adj.push(this.getSquare(x+1,y+1));
+            }
+            if (this.getSquare(x-1,y-1) !== undefined && this.getSquare(x-1,y-1).state.visited === 0 && this.getSquare(x-1,y-1).state.squareType !== 1) {
+                adj.push(this.getSquare(x-1,y-1));
+            }
+            if (this.getSquare(x-1,y+1) !== undefined && this.getSquare(x-1,y+1).state.visited === 0 && this.getSquare(x-1,y+1).state.squareType !== 1) {
+                adj.push(this.getSquare(x-1,y+1));
+            }
+            if (this.getSquare(x+1,y-1) !== undefined && this.getSquare(x+1,y-1).state.visited === 0 && this.getSquare(x+1,y-1).state.squareType !== 1) {
+                adj.push(this.getSquare(x+1,y-1));
+            }
+        }
+
         return adj;
     }
 
