@@ -304,7 +304,7 @@ class Grid extends React.Component {
         this.getSquare(xStart,yStart).setAsVisited();
         this.getSquare(xStart,yStart).colorSquare(colors.visited);
         this.highlightedSquares[0].highlight();
-        g.set(xStart.toString() + " " + yStart.toString(),0);
+        g.set(xStart.toString() + "-" + yStart.toString(),0);
         setTimeout(function(open,closed,g,h) {this.AStarLoop(open,closed,g,h)}.bind(this),this.state.interval,open,closed,g,h);
     }
 
@@ -317,9 +317,9 @@ class Grid extends React.Component {
         var squareWithLeastDistanceIndex;
         for (var i = 0; i < open.length; i++) {
             var square = open[i];
-            if (this.DistanceFromEnd(square.props.x,square.props.y) + g.get(square.props.x.toString() + " " + square.props.y.toString()) < leastDistance) {
+            if (this.DistanceFromEnd(square.props.x,square.props.y) + g.get(this.SquareId(square)) < leastDistance) {
                 squareWithLeastDistanceIndex = i;
-                leastDistance = this.DistanceFromEnd(square.props.x,square.props.y) + g.get(square.props.x.toString() + " " + square.props.y.toString());
+                leastDistance = this.DistanceFromEnd(square.props.x,square.props.y) + g.get(square.props.x.toString() + "-" + square.props.y.toString());
             }
 
             this.highlightedSquares.push(square);
@@ -340,12 +340,12 @@ class Grid extends React.Component {
             if (adjacentSquares[i] === this.end) {
                 return 0;
             }
-            if (!g[adjacentSquares[i].props.x.toString() + " " + adjacentSquares[i].props.y.toString()]) {
-                g.set(adjacentSquares[i].props.x.toString() + " " + adjacentSquares[i].props.y.toString(),g.get(currentSquare.props.x.toString() + " " + currentSquare.props.y.toString()) + 1);
-            } else if (g.get(adjacentSquares[i].props.x.toString() + " " + adjacentSquares[i].props.y.toString()) > g.get(currentSquare.props.x.toString() + " " + currentSquare.props.y.toString()) + 1) {
-                g.set(adjacentSquares[i].props.x.toString() + " " + adjacentSquares[i].props.y.toString(),g.get(currentSquare.props.x.toString() + " " + currentSquare.props.y.toString()) + 1); //Add 1 because distance will always be 1 (no weights)
+            if (!g.get(this.SquareId(adjacentSquares[i]))) {
+                g.set(this.SquareId(adjacentSquares[i]),g.get(this.SquareId(currentSquare)) + 1);
+            } else if (g.get(this.SquareId(adjacentSquares[i])) > g.get(this.SquareId(currentSquare)) + 1) {
+                g.set(this.SquareId(adjacentSquares[i]),g.get(this.SquareId(currentSquare)) + 1); //Add 1 because distance will always be 1 (no weights)
             }
-            var f = g[adjacentSquares[i].props.x.toString() + " " + adjacentSquares[i].props.y.toString()] + this.DistanceFromEnd(adjacentSquares[i].props.x,adjacentSquares[i].props.y);
+            var f = g[this.SquareId(adjacentSquares[i])] + this.DistanceFromEnd(adjacentSquares[i].props.x,adjacentSquares[i].props.y);
             if (!this.IsInArr(adjacentSquares[i],open) && !this.IsInArr(adjacentSquares[i],closed)) {
                 open.push(adjacentSquares[i]);
             }
@@ -375,6 +375,11 @@ class Grid extends React.Component {
     //Returns Manhattan Distance from End Square
     DistanceFromEnd(x,y) {
         return Math.abs(x-this.end.props.x) + Math.abs(y-this.end.props.y);
+    }
+
+    //Returns id used in maps
+    SquareId(square) {
+        return square.props.x.toString() + "-" + square.props.y.toString()
     }
 
     //Returns all neighbouring squares that are unvisited and not wall
