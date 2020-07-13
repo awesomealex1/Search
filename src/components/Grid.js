@@ -299,12 +299,12 @@ class Grid extends React.Component {
         var closed = [];
         var g = new Map();
         var h = new Map();
-        open.push(this.getSquare(xStart,yStart));
-        this.highlightedSquares.push(this.getSquare(xStart,yStart));
-        this.getSquare(xStart,yStart).setAsVisited();
-        this.getSquare(xStart,yStart).colorSquare(colors.visited);
+        open.push(this.start);
+        this.highlightedSquares.push(this.start);
+        this.start.setAsVisited();
+        this.start.colorSquare(colors.visited);
         this.highlightedSquares[0].highlight();
-        g.set(xStart.toString() + "-" + yStart.toString(),0);
+        g.set(this.SquareId(this.start),0);
         setTimeout(function(open,closed,g,h) {this.AStarLoop(open,closed,g,h)}.bind(this),this.state.interval,open,closed,g,h);
     }
 
@@ -347,7 +347,7 @@ class Grid extends React.Component {
             } else if (g.get(adjacentSquareId) > g.get(currentSquareId) + 1) {
                 g.set(adjacentSquareId,g.get(currentSquareId) + 1); //Add 1 because distance will always be 1 (no weights)
             }
-            var f = g.get(adjacentSquareId) + this.DistanceFromEnd(adjacentSquares[i].props.x,adjacentSquares[i].props.y);
+            //var f = g.get(adjacentSquareId) + this.DistanceFromEnd(adjacentSquares[i].props.x,adjacentSquares[i].props.y);
             if (!this.IsInArr(adjacentSquares[i],open) && !this.IsInArr(adjacentSquares[i],closed)) {
                 open.push(adjacentSquares[i]);
             }
