@@ -319,7 +319,7 @@ class Grid extends React.Component {
             var square = open[i];
             if (this.DistanceFromEnd(square.props.x,square.props.y) + g.get(this.SquareId(square)) < leastDistance) {
                 squareWithLeastDistanceIndex = i;
-                leastDistance = this.DistanceFromEnd(square.props.x,square.props.y) + g.get(square.props.x.toString() + "-" + square.props.y.toString());
+                leastDistance = this.DistanceFromEnd(square.props.x,square.props.y) + g.get(this.SquareId(square));
             }
 
             this.highlightedSquares.push(square);
@@ -340,12 +340,14 @@ class Grid extends React.Component {
             if (adjacentSquares[i] === this.end) {
                 return 0;
             }
-            if (!g.get(this.SquareId(adjacentSquares[i]))) {
-                g.set(this.SquareId(adjacentSquares[i]),g.get(this.SquareId(currentSquare)) + 1);
-            } else if (g.get(this.SquareId(adjacentSquares[i])) > g.get(this.SquareId(currentSquare)) + 1) {
-                g.set(this.SquareId(adjacentSquares[i]),g.get(this.SquareId(currentSquare)) + 1); //Add 1 because distance will always be 1 (no weights)
+            var adjacentSquareId = this.SquareId(adjacentSquares[i]);
+            var currentSquareId = this.SquareId(currentSquare);
+            if (!g.get(adjacentSquareId)) {
+                g.set(adjacentSquareId,g.get(currentSquareId) + 1);
+            } else if (g.get(adjacentSquareId) > g.get(currentSquareId) + 1) {
+                g.set(adjacentSquareId,g.get(currentSquareId) + 1); //Add 1 because distance will always be 1 (no weights)
             }
-            var f = g[this.SquareId(adjacentSquares[i])] + this.DistanceFromEnd(adjacentSquares[i].props.x,adjacentSquares[i].props.y);
+            var f = g.get(adjacentSquareId) + this.DistanceFromEnd(adjacentSquares[i].props.x,adjacentSquares[i].props.y);
             if (!this.IsInArr(adjacentSquares[i],open) && !this.IsInArr(adjacentSquares[i],closed)) {
                 open.push(adjacentSquares[i]);
             }
