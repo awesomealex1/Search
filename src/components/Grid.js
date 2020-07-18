@@ -172,11 +172,13 @@ class Grid extends React.Component {
         var xEnd = this.end.props.x;
         var yEnd = this.end.props.y;
         var end = this.getSquare(xEnd,yEnd);
-        if(start === undefined && end === undefined) {
+        var startExists = start !== undefined && start.state.color === colors.start;
+        var endExists = end !== undefined && end.state.color === colors.end;
+        if(!startExists && !endExists) {
             alert("Please add an end and a start node");
-        } else if (start === undefined) {
+        } else if (!startExists) {
             alert("Please add a start node");
-        } else if (end === undefined) {
+        } else if (!endExists) {
             alert("Please add an end node");
         } else {
             console.log("search started");
