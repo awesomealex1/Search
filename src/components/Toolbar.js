@@ -45,8 +45,8 @@ class Toolbar extends React.Component {
             <div>
                 <button onClick={() => this.props.handleSearch(this.state.algorithm)}>Search</button>
                 <select defaultValue={this.state.algorithm} onChange={this.handleAlgorithmChange}>
-                    <option value="DFS">DFS</option>
                     <option value="BFS">BFS</option>
+                    <option value="DFS">DFS</option>
                     <option value="ASTAR">A*</option>
                 </select>
                 <label>Square Size:</label>

@@ -373,8 +373,6 @@ class Grid extends React.Component {
         }
 
         closed.push(currentSquare); //Put current square in closed
-        
-        
 
         if (open.length > 0) {
             setTimeout(function(open,closed,g,h) {this.AStarLoop(open,closed,g,h)}.bind(this),this.state.interval,open,closed,g,h);
