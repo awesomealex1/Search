@@ -23,6 +23,7 @@ class Grid extends React.Component {
         }
 
         this.grid = new Map();
+        this.searchOngoing = false;
 
         this.handleMouseDown = this.handleMouseDown.bind(this);
         this.handleMouseUp = this.handleMouseUp.bind(this);
@@ -118,7 +119,6 @@ class Grid extends React.Component {
     }
 
     setStartSquare(x,y) {
-        console.log(this.xStart);
         if (this.xStart !== undefined && this.yStart !== undefined && this.getSquare(this.xStart,this.yStart)) {
             this.getSquare(this.xStart,this.yStart).unsetAsStartOrEnd();
         }
@@ -126,6 +126,14 @@ class Grid extends React.Component {
         this.start = this.getSquare(x,y);
         this.xStart = x;
         this.yStart = y;
+    }
+
+    unsetStartOrEnd(z) {    //z == 0: start, z == 1: end
+        if (z === 0) {
+            this.start = undefined;
+        } else if (z === 1) {
+            this.end = undefined;
+        }
     }
 
     setEndSquare(x,y) {
@@ -161,8 +169,13 @@ class Grid extends React.Component {
 
     //Used by Toolbar Start button
     handleSearch(algorithm) {
-        this.prepareGrid(false);    //false = not first run
-        setTimeout(function(algorithm) {this.startSearch(algorithm)}.bind(this),this.state.interval,algorithm);
+        if (!this.searchOngoing) {
+            
+            this.prepareGrid(false);    //false = not first run
+            setTimeout(function(algorithm) {this.startSearch(algorithm)}.bind(this),this.state.interval,algorithm);
+        } else {
+            alert("Wait for the current search to finish");
+        }
     }
 
     startSearch(algorithm) {
@@ -181,6 +194,7 @@ class Grid extends React.Component {
         } else if (!endExists) {
             alert("Please add an end node");
         } else {
+            this.searchOngoing = true;
             console.log("search started");
             if (algorithm === "BFS") {
                 this.BFS(xStart,yStart);
@@ -210,10 +224,12 @@ class Grid extends React.Component {
 
     BFSLoop(queue) {
         if (queue.length < 1) {
+            this.searchOngoing = false;
             return 0;
         }
         var square = queue.shift();
         if(square.props.x === this.xEnd && square.props.y === this.yEnd) {
+            this.searchOngoing = false;
             return 0;
         }
         var adj = this.FreeAdjacentSquares(square);
@@ -223,6 +239,7 @@ class Grid extends React.Component {
         this.highlightedSquares = [];
         for (var i = 0; i < adj.length; i++) {
             if(adj[i].props.x === this.xEnd && adj[i].props.y === this.yEnd) {
+                this.searchOngoing = false;
                 return 0;
             }
             adj[i].setAsVisited();
@@ -256,6 +273,7 @@ class Grid extends React.Component {
             this.highlightedSquares = [];
             var top = stack.pop();
             if (stack.length < 1) {
+                this.searchOngoing = false;
                 return 0;
             }
             var tmp = stack.pop();
@@ -288,6 +306,8 @@ class Grid extends React.Component {
             this.highlightedSquares.push(square);
             this.highlightedSquares[0].highlight();
             setTimeout(function(x,y,square,stack) {this.DFSLoop(x,y,square,stack)}.bind(this),this.state.interval,x,y,square,stack);
+        } else {
+            this.searchOngoing = false;
         }
     }
 
@@ -357,6 +377,7 @@ class Grid extends React.Component {
                     this.highlightedSquares[i].unhighlight();
                 }
                 this.highlightedSquares = [];
+                this.searchOngoing = false;
                 return 0;
             }
 
@@ -378,6 +399,8 @@ class Grid extends React.Component {
 
         if (open.length > 0) {
             setTimeout(function(open,closed,g,h) {this.AStarLoop(open,closed,g,h)}.bind(this),this.state.interval,open,closed,g,h);
+        } else {
+            this.searchOngoing = false;
         }
     }
 
@@ -478,6 +501,7 @@ class Grid extends React.Component {
             setEndSquare: this.setEndSquare,
             addSquareToGrid: this.addSquareToGrid,
             removeSquareFromGrid: this.removeSquareFromGrid,
+            unsetStartOrEnd: this.unsetStartOrEnd,
         }
 
         return (
