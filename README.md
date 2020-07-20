@@ -5,6 +5,9 @@ Currently supports: Depth First Search, Breadth First Search, A* Search (Diagona
 
 ## Ideas for further improvement
 Add Toggle for wether diagonal search is allowed.
+
 Add Toggle for wether walls can be crossed diagonally.
+
 Different terrains with different movement speeds.
+
 More algorithms of course.
