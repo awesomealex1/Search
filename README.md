@@ -1,5 +1,5 @@
 # Website to visualise various search/pathfinding algorithms
-Check it out at <http://alexmurphy.me>
+Check it out at <https://awesomealex1.github.io/Search/>
 
 Currently supports: Depth First Search, Breadth First Search, A* Search (Diagonal and not diagonal - only configurable in source code)
 
